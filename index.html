@@ -155,7 +155,6 @@
             display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border); padding-bottom: 10px;
         }
         
-        /* จัดกรอบแสดงการ์ดด้านนอกให้เท่ากันเป๊ะทุกลุคทุกขนาด */
         .template-grid { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -167,7 +166,7 @@
         .card-item { 
             background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; 
             cursor: pointer; position: relative; display: flex; flex-direction: column; 
-            aspect-ratio: 3 / 4.2; /* ล็อกสัดส่วนกล่องให้เท่ากันเป๊ะทุกใบ */
+            aspect-ratio: 3 / 4.2; 
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
         .card-item:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--primary); z-index: 2; }
@@ -175,7 +174,6 @@
         .card-item.secret { border: 2px solid var(--warning); }
         .secret-badge { position: absolute; top: 0; right: 0; background: var(--warning); color: #fff; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 0 var(--radius-sm) 0 var(--radius-sm); z-index: 3; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
         
-        /* ล็อกรูปด้านนอกให้เต็มกรอบสวยงาม ไม่เบี้ยว */
         .card-img-wrapper {
             width: 100%;
             height: 100%;
@@ -188,7 +186,7 @@
         .card-img { 
             width: 100%; 
             height: 100%; 
-            object-fit: cover; /* เติมเต็มกรอบพอดีสวยงาม */
+            object-fit: cover; 
             transition: transform 0.3s; 
         }
         .card-item:hover .card-img { transform: scale(1.05); }
@@ -209,7 +207,6 @@
             padding: 6px; text-align: center; font-size: 11px; font-weight: 700; color: #fff; border-top: 1px solid rgba(255,255,255,0.1); 
         }
 
-        /* Modal ดีไซน์พรีเมียม */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 9999; padding: 16px; overflow-y: auto; }
         .modal-content { background: var(--surface); color: var(--text); padding: 24px; border-radius: var(--radius); max-width: 100%; width: 440px; position: relative; margin: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6); border: 1px solid var(--border); animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 
@@ -304,10 +301,22 @@
                     </div>
                 </div>
                 
-                <div style="display:flex; gap:12px;">
-                    <div class="form-group" style="flex:1;"><label>หมายเลข</label><input type="text" id="editCardNum"></div>
-                    <div class="form-group" style="flex:2;"><label>ชื่อการ์ด</label><input type="text" id="editCardName" required></div>
+                <div class="form-group">
+                    <label>🔢 หมายเลข</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="editCardNum">
+                        <button type="button" class="btn-select" onclick="openPicker('editCardNum', 'number', 'editColName')">📌 เลือก</button>
+                    </div>
                 </div>
+
+                <div class="form-group">
+                    <label>🃏 ชื่อการ์ด</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="editCardName" required>
+                        <button type="button" class="btn-select" onclick="openPicker('editCardName', 'cardname', 'editColName')">📌 เลือก</button>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label>ชื่องาน (Event)</label>
                     <div class="input-with-btn">
@@ -510,9 +519,20 @@
                     </div>
                 </div>
                 
-                <div style="display:flex; gap:12px;">
-                    <div class="form-group" style="flex:1;"><label>🔢 หมายเลข</label><input type="text" id="inpCardNum" placeholder="01"></div>
-                    <div class="form-group" style="flex:2;"><label>🃏 ชื่อการ์ด</label><input type="text" id="inpCardName" required placeholder="Ver. A"></div>
+                <div class="form-group">
+                    <label>🔢 หมายเลข</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="inpCardNum" placeholder="01">
+                        <button type="button" class="btn-select" onclick="openPicker('inpCardNum', 'number', 'inpColName')">📌 เลือก</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>🃏 ชื่อการ์ด</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="inpCardName" required placeholder="Ver. A">
+                        <button type="button" class="btn-select" onclick="openPicker('inpCardName', 'cardname', 'inpColName')">📌 เลือก</button>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -553,7 +573,7 @@
         `;
     }
 
-    window.openPicker = (inputId, type) => {
+    window.openPicker = (inputId, type, colInputId = null) => {
         activeTargetInput = inputId;
         const titleEl = document.getElementById('pickerTitle');
         const container = document.getElementById('pickerContainer');
@@ -568,6 +588,16 @@
         } else if (type === 'hashtag') {
             titleEl.innerText = '🏷️ เลือกแฮชแท็ก';
             items = [...new Set(myCards.map(c => c.hashtag).filter(Boolean))].sort();
+        } else if (type === 'number') {
+            titleEl.innerText = '🔢 เลือกหมายเลข';
+            let colName = colInputId ? document.getElementById(colInputId).value.trim().toUpperCase() : '';
+            let filtered = colName ? myCards.filter(c => c.collectionName === colName) : myCards;
+            items = [...new Set(filtered.map(c => c.cardNumber).filter(Boolean))].sort((a, b) => (parseInt(a) || 0) - (parseInt(b) || 0));
+        } else if (type === 'cardname') {
+            titleEl.innerText = '🃏 เลือกชื่อการ์ด';
+            let colName = colInputId ? document.getElementById(colInputId).value.trim().toUpperCase() : '';
+            let filtered = colName ? myCards.filter(c => c.collectionName === colName) : myCards;
+            items = [...new Set(filtered.map(c => c.cardName).filter(Boolean))].sort();
         }
 
         if (items.length === 0) {
