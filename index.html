@@ -103,21 +103,11 @@
         .filter-btn.active { background: var(--dark); color: white; border-color: var(--dark); }
 
         .collection-section { margin-bottom: 35px; width: 100%; }
-        .collection-header {
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 14px;
-        }
         .collection-title { 
-            color: var(--dark); font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin: 0;
+            color: var(--dark); font-size: 15px; font-weight: 700; margin-bottom: 14px; text-align: left; 
+            display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border); padding-bottom: 8px;
         }
         
-        .btn-arrow-toggle {
-            background: #f1f5f9; border: 1px solid var(--border); color: #475569;
-            width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.2s; font-size: 12px; padding: 0;
-        }
-        .btn-arrow-toggle:hover { background: #e2e8f0; color: var(--dark); transform: scale(1.1); }
-
         .template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 14px; }
         @media (min-width: 640px) { .template-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); } }
 
@@ -133,10 +123,6 @@
         
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         
-        /* ซ่อนรูปภาพเมื่อเปิดใช้งาน */
-        .card-item.hidden-img .card-img { filter: blur(16px) grayscale(100%); opacity: 0.1; }
-        .card-item.hidden-img .card-mini-info { background: var(--dark); color: white; }
-
         .status-toggle { 
             position: absolute; top: 6px; left: 6px; font-size: 11px; width: 24px; height: 24px; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; z-index: 3; 
@@ -282,7 +268,6 @@
     let currentFilter = 'all', searchQuery = '';
     let currentCardId = null;
     let activeTargetInput = null;
-    let hiddenCollections = {};
 
     supabase.auth.getSession().then(({ data: { session } }) => {
         if (session) { currentUser = session.user; toggleAuthView(true); loadData(); }
@@ -334,11 +319,6 @@
     window.setFilter = (filter) => { currentFilter = filter; renderHome(); }
     window.setSearch = (val) => { searchQuery = val.toLowerCase(); renderHome(); }
 
-    window.toggleHideCollection = (colName) => {
-        hiddenCollections[colName] = !hiddenCollections[colName];
-        renderHome();
-    }
-
     window.renderHome = () => {
         const container = document.getElementById('appContent');
         const allColNames = [...new Set(myCards.map(c => c.collectionName))].sort(); 
@@ -370,25 +350,17 @@
 
             if (cardsInCol.length > 0) {
                 const ownedInCol = cardsInCol.filter(c => c.isOwned).length;
-                const isHidden = hiddenCollections[colName] || false;
-                
                 html += `
                     <div class="collection-section">
-                        <div class="collection-header">
-                            <div class="collection-title">📁 ${colName} <span style="color:#64748b; font-weight:600; font-size: 13px;">(${ownedInCol}/${cardsInCol.length})</span></div>
-                            <button class="btn-arrow-toggle" onclick="toggleHideCollection('${colName}')" title="${isHidden ? 'แสดงรูป' : 'ซ่อนรูป'}">
-                                ${isHidden ? '🔽' : '🔼'}
-                            </button>
-                        </div>
+                        <div class="collection-title">📁 ${colName} <span style="color:#64748b; font-weight:600; font-size: 13px;">(${ownedInCol}/${cardsInCol.length})</span></div>
                         <div class="template-grid">
                 `;
 
                 cardsInCol.forEach(c => {
                     const secretClass = c.isSecret ? 'secret' : '';
                     const secretBadge = c.isSecret ? `<div class="secret-badge">★ SECRET</div>` : '';
-                    const hideClass = isHidden ? 'hidden-img' : '';
                     html += `
-                        <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass} ${hideClass}" onclick="openModal('${c.id}')">
+                        <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" onclick="openModal('${c.id}')">
                             ${secretBadge}
                             <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">${c.isOwned ? '✓' : '!'}</div>
                             <img src="${c.imageUrl}" class="card-img" loading="lazy">
@@ -517,7 +489,7 @@
                 hashtag: document.getElementById('inpHashtag').value.trim().toUpperCase(),
                 is_secret: document.getElementById('inpIsSecret').checked,
                 image_url: publicUrlData.publicUrl,
-                is_owned: document.getElementById('inpIsOwned'].checked
+                is_owned: document.getElementById('inpIsOwned').checked
             }]);
 
             if (insertError) throw insertError;
