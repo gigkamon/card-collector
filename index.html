@@ -3,130 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JANJINGJING PHOTOCARD LIST (Supabase)</title>
+    <title>JANJINGJING PHOTOCARD COLLECTION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #d93838;
-            --primary-hover: #b91c1c;
-            --success: #10b981; --warning: #f59e0b; --danger: #ef4444; 
-            --dark: #0f172a; --text: #334155;
-            --bg: #fffbf0;
+            --primary: #f43f5e;
+            --primary-hover: #e11d48;
+            --primary-light: #fff1f2;
+            --success: #10b981; 
+            --warning: #f59e0b; 
+            --danger: #ef4444; 
+            --dark: #0f172a; 
+            --text: #334155;
+            --bg: #f8fafc;
             --surface: #ffffff;
+            --border: #e2e8f0;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
         }
 
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         
-        .container { background: var(--surface); width: 100%; max-width: 1000px; border-radius: 24px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.04); margin-bottom: 20px; }
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 24px 16px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
         
-        h2 { color: var(--primary); margin-top: 0; text-align: center; font-weight: 800; font-size: 24px; letter-spacing: 1px; text-transform: uppercase; }
-        .sub-title { text-align: center; font-size: 12px; color: #64748b; margin-top: -15px; margin-bottom: 20px; }
+        .container { 
+            background: var(--surface); 
+            width: 100%; 
+            max-width: 900px; 
+            border-radius: var(--radius); 
+            padding: 30px; 
+            box-shadow: var(--shadow); 
+            border: 1px solid var(--border);
+            margin-bottom: 24px; 
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
-        .form-group { margin-bottom: 15px; text-align: left; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; color: #475569; font-size: 13px; }
-        input[type="text"], input[type="email"], input[type="password"] { width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; outline: none; }
-        input[type="file"] { width: 100%; padding: 10px; background: #f8fafc; border-radius: 10px; border: 2px dashed #cbd5e1; cursor: pointer; }
+        h2 { 
+            color: var(--dark); 
+            margin-top: 0; 
+            text-align: center; 
+            font-weight: 800; 
+            font-size: 26px; 
+            letter-spacing: -0.5px; 
+        }
         
-        button { border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 14px; padding: 10px 16px; }
-        .btn-block { width: 100%; padding: 12px; margin-bottom: 10px; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-success { background: var(--success); color: white; }
+        .sub-title { 
+            text-align: center; 
+            font-size: 13px; 
+            color: #64748b; 
+            margin-top: -10px; 
+            margin-bottom: 25px; 
+            font-weight: 500;
+        }
+        
+        .form-group { margin-bottom: 18px; text-align: left; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #475569; font-size: 13px; }
+        
+        input[type="text"], input[type="email"], input[type="password"] { 
+            width: 100%; 
+            padding: 12px 16px; 
+            border: 2px solid var(--border); 
+            border-radius: var(--radius-sm); 
+            font-size: 14px; 
+            outline: none; 
+            transition: all 0.2s;
+            background: #fff;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        input[type="file"] { 
+            width: 100%; 
+            padding: 12px; 
+            background: #f8fafc; 
+            border-radius: var(--radius-sm); 
+            border: 2px dashed #cbd5e1; 
+            cursor: pointer; 
+            font-size: 13px;
+        }
+        
+        button { 
+            border: none; 
+            border-radius: var(--radius-sm); 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            font-size: 14px; 
+            padding: 12px 20px; 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        button:active { transform: scale(0.98); }
+        
+        .btn-block { width: 100%; margin-bottom: 12px; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25); }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-success { background: var(--success); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); }
+        .btn-success:hover { background: #059669; }
         .btn-secondary { background: #64748b; color: white; }
+        .btn-secondary:hover { background: #475569; }
         .btn-warning { background: var(--warning); color: white; }
         .btn-danger { background: var(--danger); color: white; }
-        .btn-outline { background: #f1f5f9; color: #475569; }
+        .btn-outline { background: #ffffff; color: #475569; border: 1.5px solid var(--border); }
+        .btn-outline:hover { background: #f8fafc; border-color: #cbd5e1; }
         
-        .tools-bar { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; }
-        .search-input { width: 100%; padding: 10px 16px; border-radius: 20px; border: 1px solid #e2e8f0; background: #f8fafc; outline: none; }
+        .tools-bar { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+        .search-input { width: 100%; padding: 12px 18px; border-radius: 30px; border: 1.5px solid var(--border); background: white; outline: none; font-size: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+        .search-input:focus { border-color: var(--primary); }
+        
         .filter-group { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-        .filter-btn { padding: 6px 16px; border-radius: 20px; border: 1px solid #e2e8f0; background: white; color: #64748b; font-size: 12px; }
-        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .filter-btn { padding: 8px 18px; border-radius: 30px; border: 1.5px solid var(--border); background: white; color: #64748b; font-size: 13px; font-weight: 600; }
+        .filter-btn.active { background: var(--dark); color: white; border-color: var(--dark); }
 
-        .collection-section { margin-bottom: 30px; width: 100%; }
-        .collection-title { color: var(--primary); font-size: 12px; font-weight: 700; margin-bottom: 10px; text-align: left; display: flex; align-items: center; gap: 8px; }
+        .collection-section { margin-bottom: 35px; width: 100%; }
+        .collection-title { 
+            color: var(--dark); 
+            font-size: 15px; 
+            font-weight: 700; 
+            margin-bottom: 14px; 
+            text-align: left; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+        }
         
         .template-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); 
-            gap: 8px; 
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
+            gap: 14px; 
+        }
+
+        @media (min-width: 640px) {
+            .template-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
         }
 
         .card-item { 
             background: #fff; 
-            border: 1px solid #e2e8f0; 
-            border-radius: 8px; 
+            border: 1.5px solid var(--border); 
+            border-radius: var(--radius-sm); 
             overflow: hidden; 
             cursor: pointer; 
             position: relative; 
             display: flex; 
             flex-direction: column; 
             aspect-ratio: 2.5/3.5; 
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
-        .card-item:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 2; }
+        .card-item:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-color: #cbd5e1; z-index: 2; }
         
-        .card-item.secret { border: 2px solid #fbbf24; }
-        .secret-badge { position: absolute; top: -2px; right: -2px; background: #fbbf24; color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 0 8px 0 8px; z-index: 3; }
+        .card-item.secret { border: 2px solid var(--warning); }
+        .secret-badge { position: absolute; top: 0; right: 0; background: var(--warning); color: white; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 0 var(--radius-sm) 0 var(--radius-sm); z-index: 3; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         
-        .status-toggle { position: absolute; top: 4px; left: 4px; font-size: 10px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; z-index: 3; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: 0.2s; backdrop-filter: blur(2px); }
-        .status-toggle:hover { transform: scale(1.2); }
+        .status-toggle { 
+            position: absolute; 
+            top: 6px; 
+            left: 6px; 
+            font-size: 11px; 
+            width: 24px; 
+            height: 24px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            font-weight: 700; 
+            z-index: 3; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2); 
+            transition: 0.2s; 
+            backdrop-filter: blur(4px); 
+        }
+        .status-toggle:hover { transform: scale(1.15); }
         .owned .card-img { filter: grayscale(0%); opacity: 1; }
-        .owned .status-toggle { background: rgba(16, 185, 129, 0.9); }
-        .not-owned .card-img { filter: grayscale(100%); opacity: 0.35; }
-        .not-owned .status-toggle { background: rgba(239, 68, 68, 0.8); }
+        .owned .status-toggle { background: rgba(16, 185, 129, 0.95); }
+        .not-owned .card-img { filter: grayscale(100%); opacity: 0.3; }
+        .not-owned .status-toggle { background: rgba(239, 68, 68, 0.9); }
         
-        .card-mini-info { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.9); padding: 4px; text-align: center; font-size: 10px; font-weight: 700; color: var(--dark); border-top: 1px solid #e2e8f0; }
+        .card-mini-info { 
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            background: rgba(255, 255, 255, 0.92); 
+            backdrop-filter: blur(4px);
+            padding: 5px; 
+            text-align: center; 
+            font-size: 11px; 
+            font-weight: 700; 
+            color: var(--dark); 
+            border-top: 1px solid var(--border); 
+        }
 
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; z-index: 9999; padding: 20px; overflow-y: auto; }
-        .modal-content { background: white; padding: 25px; border-radius: 24px; max-width: 100%; width: 400px; position: relative; margin: auto; }
-        .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; font-size: 13px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(6px); justify-content: center; align-items: center; z-index: 9999; padding: 20px; overflow-y: auto; }
+        .modal-content { background: white; padding: 30px; border-radius: var(--radius); max-width: 100%; width: 420px; position: relative; margin: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
         .detail-label { color: #64748b; font-weight: 600; }
-        .detail-value { color: var(--dark); text-align: right; font-weight: 600; }
+        .detail-value { color: var(--dark); text-align: right; font-weight: 700; }
         
-        .app-section { display: none; }
+        .app-section { display: none; width: 100%; max-width: 900px; }
+        
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: var(--surface);
+            padding: 16px 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
     </style>
 </head>
 <body>
 
-<div class="container" id="authSection" style="max-width: 400px;">
-    <h2>🔐 LOGIN</h2>
-    <div class="form-group"><input type="email" id="authEmail" placeholder="อีเมล"></div>
+<!-- หน้า Login / Register -->
+<div class="container" id="authSection" style="max-width: 400px; margin-top: 60px;">
+    <h2>✨ PHOTOCARD VAULT</h2>
+    <div class="sub-title" style="margin-bottom: 25px;">เข้าสู่ระบบเพื่อจัดการคอลเลกชันของคุณ</div>
+    <div class="form-group"><input type="email" id="authEmail" placeholder="อีเมลของคุณ"></div>
     <div class="form-group"><input type="password" id="authPassword" placeholder="รหัสผ่าน"></div>
-    <button class="btn-block btn-primary" onclick="handleAuth('login')">เข้าสู่ระบบ</button>
-    <button class="btn-block btn-secondary" onclick="handleAuth('register')">สมัครสมาชิกใหม่</button>
+    <button class="btn-block btn-primary" onclick="handleAuth('login')">🚀 เข้าสู่ระบบ</button>
+    <button class="btn-block btn-outline" onclick="handleAuth('register')">✨ สมัครสมาชิกใหม่</button>
 </div>
 
-<div id="mainAppSection" class="app-section" style="width: 100%; max-width: 1000px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <button onclick="renderAddForm()" class="btn-success">➕ เพิ่มการ์ด</button>
-        <button onclick="handleLogout()" class="btn-outline" style="margin:0;">ออกจากระบบ</button>
+<!-- หน้าหลักแอปพลิเคชัน -->
+<div id="mainAppSection" class="app-section">
+    <div class="header-actions">
+        <button onclick="renderAddForm()" class="btn-success" style="margin:0;">➕ เพิ่มการ์ดใหม่</button>
+        <button onclick="handleLogout()" class="btn-outline" style="margin:0;">🚪 ออกจากระบบ</button>
     </div>
-    <div class="container" id="appContent" style="background: transparent; box-shadow: none; padding: 0;"></div>
+    <div class="container" id="appContent" style="background: var(--surface);"></div>
 </div>
 
+<!-- Modal แสดงรายละเอียดและแก้ไข -->
 <div id="modal" class="modal-overlay" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
+        
+        <!-- โหมดดูข้อมูล -->
         <div id="viewMode">
-            <div style="background:#000; border-radius:12px; padding:15px; display:flex; justify-content:center; margin-bottom: 15px;">
-                <img id="m-img" src="" style="border-radius:8px; object-fit: cover; max-height: 300px;">
+            <div style="background:#0f172a; border-radius:var(--radius-sm); padding:12px; display:flex; justify-content:center; margin-bottom: 20px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);">
+                <img id="m-img" src="" style="border-radius:6px; object-fit: cover; max-height: 280px; max-width: 100%;">
             </div>
-            <div style="color:var(--primary); font-size:11px; font-weight:bold; margin-bottom:4px;" id="m-col"></div>
-            <div style="font-size:20px; font-weight:bold; color:var(--dark);" id="m-name"></div>
-            <div style="font-size:12px; color:#94a3b8; margin-bottom:15px;" id="m-num"></div>
+            <div style="color:var(--primary); font-size:11px; font-weight:800; letter-spacing: 0.5px; margin-bottom:4px;" id="m-col"></div>
+            <div style="font-size:22px; font-weight:800; color:var(--dark); line-height: 1.2;" id="m-name"></div>
+            <div style="font-size:13px; color:#64748b; margin-bottom:18px; font-weight:600;" id="m-num"></div>
             
             <div class="detail-row"><span class="detail-label">Event</span><span class="detail-value" id="m-event"></span></div>
             <div class="detail-row" style="border-bottom:none;"><span class="detail-label">Hashtag</span><span class="detail-value" id="m-hashtag"></span></div>
             
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button onclick="toggleEditMode(true)" class="btn-block btn-warning" style="margin:0;">✏️ แก้ไข</button>
-                <button onclick="deleteCard()" class="btn-block btn-danger" style="margin:0;">🗑️ ลบ</button>
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button onclick="toggleEditMode(true)" class="btn-block btn-warning" style="margin:0; flex:1;">✏️ แก้ไข</button>
+                <button onclick="deleteCard()" class="btn-block btn-danger" style="margin:0; flex:1;">🗑️ ลบ</button>
             </div>
-            <button onclick="closeModal()" class="btn-block btn-secondary" style="margin-top:10px;">ปิด</button>
+            <button onclick="closeModal()" class="btn-block btn-outline" style="margin-top:10px;">ปิดหน้าต่าง</button>
         </div>
 
+        <!-- โหมดแก้ไขข้อมูล -->
         <div id="editMode" style="display:none;">
-            <h3 style="margin-top:0;">✏️ แก้ไขข้อมูลการ์ด</h3>
+            <h3 style="margin-top:0; color: var(--dark); font-size: 20px;">✏️ แก้ไขข้อมูลการ์ด</h3>
             <form onsubmit="saveEditData(event)">
                 <div class="form-group">
                     <label>📁 ชื่อคอลเลกชัน</label>
@@ -134,7 +298,7 @@
                     <datalist id="editColList"></datalist>
                 </div>
                 
-                <div style="display:flex; gap:10px;">
+                <div style="display:flex; gap:12px;">
                     <div class="form-group" style="flex:1;"><label>หมายเลข</label><input type="text" id="editCardNum"></div>
                     <div class="form-group" style="flex:2;"><label>ชื่อการ์ด</label><input type="text" id="editCardName" required></div>
                 </div>
@@ -154,25 +318,25 @@
                     <input type="file" id="editCardFile" accept="image/*">
                 </div>
                 
-                <label style="display:flex; align-items:center; gap:8px; font-weight:bold; color:var(--warning); cursor:pointer; margin: 15px 0;">
-                    <input type="checkbox" id="editIsSecret" style="width:18px; height:18px;"> 🌟 Secret Card
+                <label style="display:flex; align-items:center; gap:8px; font-weight:700; color:var(--dark); cursor:pointer; margin: 15px 0; background: #fffbeb; padding: 10px; border-radius: var(--radius-sm); border: 1px solid #fef3c7;">
+                    <input type="checkbox" id="editIsSecret" style="width:18px; height:18px; accent-color: var(--warning);"> 🌟 Secret Card
                 </label>
                 
                 <div style="display:flex; gap:10px; margin-top: 20px;">
-                    <button type="submit" class="btn-block btn-success" id="btnSaveEdit" style="margin:0;">💾 บันทึก</button>
-                    <button type="button" class="btn-block btn-secondary" onclick="toggleEditMode(false)" style="margin:0;">ยกเลิก</button>
+                    <button type="submit" class="btn-block btn-success" id="btnSaveEdit" style="margin:0; flex:1;">💾 บันทึก</button>
+                    <button type="button" class="btn-block btn-outline" onclick="toggleEditMode(false)" style="margin:0; flex:1;">ยกเลิก</button>
                 </div>
             </form>
         </div>
+
     </div>
 </div>
 
 <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    // 🔴 ใส่ค่า Supabase Project URL และ Anon Key ของคุณตรงนี้
     const SUPABASE_URL = "https://qkkcgtniefzdxyrktbzj.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_uPZ-JgEky9irX6kqXpIlKg_8lRyyG-F";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFra2NndG5pZWZ6ZHh5cmt0YnpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2NTExODN9.hJ5-xL7dYf5d52-example-key-placeholder"; // (ใส่คีย์จริงของคุณตรงนี้)
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -180,44 +344,44 @@
     let currentFilter = 'all', searchQuery = '';
     let currentCardId = null;
 
-    // ตรวจสอบสถานะการเข้าสู่ระบบ
     supabase.auth.getSession().then(({ data: { session } }) => {
         if (session) {
             currentUser = session.user;
-            document.getElementById('authSection').style.display = 'none';
-            document.getElementById('mainAppSection').style.display = 'block';
+            toggleAuthView(true);
             loadData();
         } else {
-            document.getElementById('authSection').style.display = 'block';
-            document.getElementById('mainAppSection').style.display = 'none';
+            toggleAuthView(false);
         }
     });
 
     supabase.auth.onAuthStateChange((event, session) => {
         if (session) {
             currentUser = session.user;
-            document.getElementById('authSection').style.display = 'none';
-            document.getElementById('mainAppSection').style.display = 'block';
+            toggleAuthView(true);
             loadData();
         } else {
             currentUser = null;
-            document.getElementById('authSection').style.display = 'block';
-            document.getElementById('mainAppSection').style.display = 'none';
+            toggleAuthView(false);
         }
     });
 
+    function toggleAuthView(isLoggedIn) {
+        document.getElementById('authSection').style.display = isLoggedIn ? 'none' : 'block';
+        document.getElementById('mainAppSection').style.display = isLoggedIn ? 'block' : 'none';
+    }
+
     window.handleAuth = async (type) => {
-        const email = document.getElementById('authEmail').value;
+        const email = document.getElementById('authEmail').value.trim();
         const password = document.getElementById('authPassword').value;
-        if(!email || !password) return alert('กรอกข้อมูลให้ครบถ้วน');
+        if(!email || !password) return alert('กรุณากรอกอีเมลและรหัสผ่านให้ครบถ้วน');
         
         if(type === 'login') {
             const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if(error) alert("ข้อผิดพลาด: " + error.message);
+            if(error) alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message);
         } else {
             const { error } = await supabase.auth.signUp({ email, password });
-            if(error) alert("ข้อผิดพลาด: " + error.message);
-            else alert('สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ');
+            if(error) alert("สมัครสมาชิกไม่สำเร็จ: " + error.message);
+            else alert('✨ สมัครสมาชิกสำเร็จ! ระบบเข้าสู่ระบบให้ทันที');
         }
     }
 
@@ -230,12 +394,8 @@
             .select('*')
             .eq('user_id', currentUser.id);
 
-        if (error) {
-            console.error('Error loading data:', error);
-            return;
-        }
+        if (error) { console.error('Error loading data:', error); return; }
 
-        // จัดรูปแบบข้อมูลให้ตรงกับโครงสร้างเดิม (แปลง snake_case เป็น camelCase)
         myCards = data.map(d => ({
             id: d.id,
             userId: d.user_id,
@@ -261,11 +421,11 @@
         const allColNames = [...new Set(myCards.map(c => c.collectionName))].sort(); 
         
         let html = `
-            <h2>JANJINGJINGJEWEL PHOTOCARD LIST</h2>
-            <div class="sub-title">Personal use only. Manage your collection (Supabase).</div>
+            <h2 style="font-size: 22px; margin-bottom: 5px;">🌟 PHOTOCARD COLLECTION</h2>
+            <div class="sub-title">ระบบจัดการการ์ดสะสมส่วนตัวของคุณ</div>
             
             <div class="tools-bar">
-                <input type="text" class="search-input" placeholder="🔍 ค้นหาชื่อ หรือ เลขการ์ด..." value="${searchQuery}" onkeyup="setSearch(this.value)">
+                <input type="text" class="search-input" placeholder="🔍 ค้นหาชื่อการ์ด หรือ หมายเลข..." value="${searchQuery}" onkeyup="setSearch(this.value)">
                 <div class="filter-group">
                     <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" onclick="setFilter('all')">ทั้งหมด (${myCards.length})</button>
                     <button class="filter-btn ${currentFilter === 'owned' ? 'active' : ''}" onclick="setFilter('owned')">✅ มีแล้ว (${myCards.filter(c=>c.isOwned).length})</button>
@@ -275,7 +435,7 @@
         `;
 
         if(allColNames.length === 0) {
-            html += `<div style="text-align:center; padding:50px; color:#94a3b8;">ยังไม่มีข้อมูลการ์ด กดปุ่ม + ด้านบนเพื่อเริ่มต้น</div>`;
+            html += `<div style="text-align:center; padding:60px 20px; color:#94a3b8; font-weight:500;">ยังไม่มีข้อมูลการ์ด กดปุ่ม <b>"➕ เพิ่มการ์ดใหม่"</b> ด้านบนเพื่อเริ่มต้นใช้งานได้เลยครับ</div>`;
         }
 
         allColNames.forEach(colName => {
@@ -292,23 +452,23 @@
                 html += `
                     <div class="collection-section">
                         <div class="collection-title">
-                            ${colName} <span style="color:#94a3b8; font-weight:normal;">(${ownedInCol}/${cardsInCol.length})</span>
+                            📁 ${colName} <span style="color:#64748b; font-weight:600; font-size: 13px;">(${ownedInCol}/${cardsInCol.length})</span>
                         </div>
                         <div class="template-grid">
                 `;
 
                 cardsInCol.forEach(c => {
                     const secretClass = c.isSecret ? 'secret' : '';
-                    const secretBadge = c.isSecret ? `<div class="secret-badge">★</div>` : '';
+                    const secretBadge = c.isSecret ? `<div class="secret-badge">★ SECRET</div>` : '';
                     
                     html += `
                         <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" onclick="openModal('${c.id}')">
                             ${secretBadge}
-                            <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">
+                            <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})" title="คลิกเปลี่ยนสถานะการมีอยู่">
                                 ${c.isOwned ? '✓' : '!'}
                             </div>
                             <img src="${c.imageUrl}" class="card-img" loading="lazy">
-                            <div class="card-mini-info">${c.cardNumber || '-'}</div>
+                            <div class="card-mini-info">${c.cardNumber ? `No. ${c.cardNumber}` : (c.cardName.length > 10 ? c.cardName.substring(0,10)+'..' : c.cardName)}</div>
                         </div>
                     `;
                 });
@@ -325,60 +485,60 @@
         const uniqueEvents = [...new Set(myCards.map(c => c.event).filter(Boolean))];
         const uniqueHashtags = [...new Set(myCards.map(c => c.hashtag).filter(Boolean))];
         
-        const datalistCols = uniqueCols.map(c => `<option value="${c}">`).join('');
-        const datalistEvents = uniqueEvents.map(e => `<option value="${e}">`).join('');
-        const datalistHashtags = uniqueHashtags.map(h => `<option value="${h}">`).join('');
-
         document.getElementById('appContent').innerHTML = `
-            <div class="container" style="margin:0 auto;">
-                <button class="btn-outline" onclick="renderHome()">⬅ ย้อนกลับ</button>
-                <h3>➕ เพิ่มการ์ดเข้าคอลเลกชัน</h3>
-                <form onsubmit="saveData(event)">
-                    <div class="form-group">
-                        <label>📁 ชื่อคอลเลกชัน</label>
-                        <input type="text" id="inpColName" list="colList" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" required autocomplete="off">
-                        <datalist id="colList">${datalistCols}</datalist>
-                    </div>
-                    
-                    <div style="display:flex; gap:10px;">
-                        <div class="form-group" style="flex:1;"><label>🔢 หมายเลข</label><input type="text" id="inpCardNum"></div>
-                        <div class="form-group" style="flex:2;"><label>🃏 ชื่อการ์ด</label><input type="text" id="inpCardName" required></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>ชื่องาน (Event)</label>
-                        <input type="text" id="inpEvent" list="eventList" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" autocomplete="off">
-                        <datalist id="eventList">${datalistEvents}</datalist>
-                    </div>
-                    <div class="form-group">
-                        <label>แฮชแท็ก</label>
-                        <input type="text" id="inpHashtag" list="hashtagList" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" autocomplete="off">
-                        <datalist id="hashtagList">${datalistHashtags}</datalist>
-                    </div>
-
-                    <div class="form-group">
-                        <label>📸 รูปภาพของการ์ด (บังคับ)</label>
-                        <input type="file" id="inpCardFile" accept="image/*" required>
-                    </div>
-                    
-                    <label style="display:flex; align-items:center; gap:8px; font-weight:bold; color:var(--warning); cursor:pointer; margin: 15px 0;">
-                        <input type="checkbox" id="inpIsSecret" style="width:20px; height:20px;"> 🌟 ตั้งเป็น Secret Card
-                    </label>
-
-                    <label style="display:flex; align-items:center; gap:8px; font-weight:bold; color:var(--success); margin-bottom:20px; cursor:pointer;">
-                        <input type="checkbox" id="inpIsOwned" checked style="width:20px; height:20px;"> ✅ มีการ์ดใบนี้ครอบครองแล้ว!
-                    </label>
-                    
-                    <button type="submit" class="btn-block btn-success" id="btnSave">📥 บันทึกข้อมูล</button>
-                </form>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <h3 style="margin:0; font-size: 20px; color: var(--dark);">➕ เพิ่มการ์ดใหม่เข้าคอลเลกชัน</h3>
+                <button class="btn-outline" onclick="renderHome()" style="padding: 8px 14px; font-size: 13px;">⬅ ย้อนกลับ</button>
             </div>
+            <form onsubmit="saveData(event)">
+                <div class="form-group">
+                    <label>📁 ชื่อคอลเลกชัน</label>
+                    <input type="text" id="inpColName" list="colList" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" required autocomplete="off" placeholder="เช่น ALBUM 1, SPECIAL VER">
+                    <datalist id="colList">${uniqueCols.map(c => `<option value="${c}">`).join('')}</datalist>
+                </div>
+                
+                <div style="display:flex; gap:12px;">
+                    <div class="form-group" style="flex:1;"><label>🔢 หมายเลขการ์ด</label><input type="text" id="inpCardNum" placeholder="เช่น 01"></div>
+                    <div class="form-group" style="flex:2;"><label>🃏 ชื่อการ์ด</label><input type="text" id="inpCardName" required placeholder="เช่น Ver. A Selfie"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>ชื่องาน (Event)</label>
+                    <input type="text" id="inpEvent" list="eventList" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" autocomplete="off" placeholder="เช่น WITHMUU FANSIGN">
+                    <datalist id="eventList">${uniqueEvents.map(e => `<option value="${e}">`).join('')}</datalist>
+                </div>
+                <div class="form-group">
+                    <label>แฮชแท็ก</label>
+                    <input type="text" id="inpHashtag" list="hashtagList" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" autocomplete="off" placeholder="เช่น #BENEFIT">
+                    <datalist id="hashtagList">${uniqueHashtags.map(h => `<option value="${h}">`).join('')}</datalist>
+                </div>
+
+                <div class="form-group">
+                    <label>📸 รูปภาพของการ์ด</label>
+                    <input type="file" id="inpCardFile" accept="image/*" required>
+                </div>
+                
+                <div style="background: #fffbeb; padding: 12px; border-radius: var(--radius-sm); border: 1px solid #fef3c7; margin: 15px 0;">
+                    <label style="display:flex; align-items:center; gap:10px; font-weight:700; color:var(--dark); cursor:pointer; margin:0;">
+                        <input type="checkbox" id="inpIsSecret" style="width:18px; height:18px; accent-color: var(--warning);"> 🌟 ตั้งเป็น Secret Card (ขอบทอง)
+                    </label>
+                </div>
+
+                <div style="background: #ecfdf5; padding: 12px; border-radius: var(--radius-sm); border: 1px solid #d1fae5; margin-bottom: 20px;">
+                    <label style="display:flex; align-items:center; gap:10px; font-weight:700; color: var(--success); cursor:pointer; margin:0;">
+                        <input type="checkbox" id="inpIsOwned" checked style="width:18px; height:18px; accent-color: var(--success);"> ✅ มีการ์ดใบนี้ครอบครองแล้ว
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn-block btn-success" id="btnSave" style="padding: 14px;">📥 บันทึกข้อมูลการ์ด</button>
+            </form>
         `;
     }
 
     window.saveData = async (e) => {
         e.preventDefault();
         const btn = document.getElementById('btnSave');
-        btn.disabled = true; btn.innerText = 'กำลังอัปโหลด...';
+        btn.disabled = true; btn.innerText = '⏳ กำลังอัปโหลดและบันทึก...';
 
         const colName = document.getElementById('inpColName').value.trim().toUpperCase();
         const eventName = document.getElementById('inpEvent').value.trim().toUpperCase();
@@ -386,16 +546,13 @@
         const cardFile = document.getElementById('inpCardFile').files[0];
 
         try {
-            // อัปโหลดไฟล์ไปที่ Supabase Storage (Bucket: cards)
             const filePath = `${currentUser.id}/${Date.now()}_card`;
             const { error: uploadError } = await supabase.storage.from('cards').upload(filePath, cardFile);
             if (uploadError) throw uploadError;
 
-            // ดึง Public URL ของรูปภาพ
             const { data: publicUrlData } = supabase.storage.from('cards').getPublicUrl(filePath);
             const cardUrl = publicUrlData.publicUrl;
 
-            // บันทึกข้อมูลลงตาราง my_cards
             const { error: insertError } = await supabase.from('my_cards').insert([{
                 user_id: currentUser.id,
                 collection_name: colName,
@@ -410,12 +567,12 @@
 
             if (insertError) throw insertError;
 
-            alert('✅ บันทึกเรียบร้อย!');
+            alert('✅ บันทึกการ์ดสำเร็จ!');
             await loadData();
             renderHome();
         } catch (error) {
-            console.error(error); alert('ผิดพลาด: ' + error.message);
-        } finally { btn.disabled = false; btn.innerText = '📥 บันทึกข้อมูล'; }
+            console.error(error); alert('เกิดข้อผิดพลาด: ' + error.message);
+        } finally { btn.disabled = false; btn.innerText = '📥 บันทึกข้อมูลการ์ด'; }
     }
 
     window.toggleOwnership = async (e, cardId, currentStatus) => {
@@ -480,7 +637,7 @@
     window.saveEditData = async (e) => {
         e.preventDefault();
         const btn = document.getElementById('btnSaveEdit');
-        btn.disabled = true; btn.innerText = 'กำลังบันทึก...';
+        btn.disabled = true; btn.innerText = '⏳ กำลังบันทึก...';
         
         try {
             const editFile = document.getElementById('editCardFile').files[0];
@@ -495,7 +652,7 @@
             };
 
             if (editFile) {
-                btn.innerText = 'กำลังอัปโหลดรูปใหม่... ⏳';
+                btn.innerText = '📸 กำลังอัปโหลดรูปใหม่...';
                 const filePath = `${currentUser.id}/${Date.now()}_card`;
                 const { error: uploadError } = await supabase.storage.from('cards').upload(filePath, editFile);
                 if (uploadError) throw uploadError;
@@ -511,12 +668,12 @@
 
             if (updateError) throw updateError;
             
-            alert('✅ อัปเดตสำเร็จ!');
+            alert('✅ อัปเดตข้อมูลสำเร็จ!');
             await loadData();
             closeModal();
             renderHome();
         } catch (err) { 
-            alert('ผิดพลาด: ' + err.message); 
+            alert('เกิดข้อผิดพลาด: ' + err.message); 
         } finally { 
             btn.disabled = false; btn.innerText = '💾 บันทึก'; 
         }
