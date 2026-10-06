@@ -306,27 +306,22 @@
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label>🔢 หมายเลข</label>
-                    <input type="text" id="editCardNum">
-                </div>
-
-                <div class="form-group">
-                    <label>🃏 ชื่อการ์ด</label>
-                    <input type="text" id="editCardName" required>
+                <div style="display:flex; gap:12px;">
+                    <div class="form-group" style="flex:1;"><label>🔢 หมายเลข</label><input type="text" id="editCardNum" placeholder="01"></div>
+                    <div class="form-group" style="flex:2;"><label>🃏 ชื่อการ์ด</label><input type="text" id="editCardName" required placeholder="Ver. A"></div>
                 </div>
 
                 <div class="form-group">
                     <label>ชื่องาน (Event)</label>
                     <div class="input-with-btn">
-                        <input type="text" id="editEvent" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" id="editEvent" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" placeholder="เช่น FANSIGN">
                         <button type="button" class="btn-select" onclick="openPicker('editEvent', 'event')">📌 เลือก</button>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>แฮชแท็ก</label>
                     <div class="input-with-btn">
-                        <input type="text" id="editHashtag" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" id="editHashtag" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" placeholder="#BENEFIT">
                         <button type="button" class="btn-select" onclick="openPicker('editHashtag', 'hashtag')">📌 เลือก</button>
                     </div>
                 </div>
@@ -518,14 +513,9 @@
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label>🔢 หมายเลข</label>
-                    <input type="text" id="inpCardNum" placeholder="01">
-                </div>
-
-                <div class="form-group">
-                    <label>🃏 ชื่อการ์ด</label>
-                    <input type="text" id="inpCardName" required placeholder="Ver. A">
+                <div style="display:flex; gap:12px;">
+                    <div class="form-group" style="flex:1;"><label>🔢 หมายเลข</label><input type="text" id="inpCardNum" placeholder="01"></div>
+                    <div class="form-group" style="flex:2;"><label>🃏 ชื่อการ์ด</label><input type="text" id="inpCardName" required placeholder="Ver. A"></div>
                 </div>
 
                 <div class="form-group">
