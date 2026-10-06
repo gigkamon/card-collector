@@ -53,23 +53,8 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        h2 { 
-            color: var(--dark); 
-            margin-top: 0; 
-            text-align: center; 
-            font-weight: 800; 
-            font-size: 26px; 
-            letter-spacing: -0.5px; 
-        }
-        
-        .sub-title { 
-            text-align: center; 
-            font-size: 13px; 
-            color: #64748b; 
-            margin-top: -10px; 
-            margin-bottom: 25px; 
-            font-weight: 500;
-        }
+        h2 { color: var(--dark); margin-top: 0; text-align: center; font-weight: 800; font-size: 26px; letter-spacing: -0.5px; }
+        .sub-title { text-align: center; font-size: 13px; color: #64748b; margin-top: -10px; margin-bottom: 25px; font-weight: 500; }
         
         .form-group { margin-bottom: 18px; text-align: left; }
         label { display: block; margin-bottom: 6px; font-weight: 600; color: #475569; font-size: 13px; }
@@ -88,6 +73,9 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 4px var(--primary-light);
         }
+
+        .input-with-btn { display: flex; gap: 8px; }
+        .input-with-btn input { flex: 1; }
 
         input[type="file"] { 
             width: 100%; 
@@ -120,15 +108,15 @@
         .btn-success { background: var(--success); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); }
         .btn-success:hover { background: #059669; }
         .btn-secondary { background: #64748b; color: white; }
-        .btn-secondary:hover { background: #475569; }
         .btn-warning { background: var(--warning); color: white; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-outline { background: #ffffff; color: #475569; border: 1.5px solid var(--border); }
         .btn-outline:hover { background: #f8fafc; border-color: #cbd5e1; }
-        
+        .btn-select { background: #f1f5f9; color: var(--dark); border: 1.5px solid var(--border); padding: 0 16px; font-size: 13px; }
+        .btn-select:hover { background: #e2e8f0; }
+
         .tools-bar { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
         .search-input { width: 100%; padding: 12px 18px; border-radius: 30px; border: 1.5px solid var(--border); background: white; outline: none; font-size: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
-        .search-input:focus { border-color: var(--primary); }
         
         .filter-group { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
         .filter-btn { padding: 8px 18px; border-radius: 30px; border: 1.5px solid var(--border); background: white; color: #64748b; font-size: 13px; font-weight: 600; }
@@ -136,65 +124,29 @@
 
         .collection-section { margin-bottom: 35px; width: 100%; }
         .collection-title { 
-            color: var(--dark); 
-            font-size: 15px; 
-            font-weight: 700; 
-            margin-bottom: 14px; 
-            text-align: left; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 8px;
+            color: var(--dark); font-size: 15px; font-weight: 700; margin-bottom: 14px; text-align: left; 
+            display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border); padding-bottom: 8px;
         }
         
-        .template-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
-            gap: 14px; 
-        }
-
-        @media (min-width: 640px) {
-            .template-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
-        }
+        .template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 14px; }
+        @media (min-width: 640px) { .template-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); } }
 
         .card-item { 
-            background: #fff; 
-            border: 1.5px solid var(--border); 
-            border-radius: var(--radius-sm); 
-            overflow: hidden; 
-            cursor: pointer; 
-            position: relative; 
-            display: flex; 
-            flex-direction: column; 
-            aspect-ratio: 2.5/3.5; 
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; 
+            cursor: pointer; position: relative; display: flex; flex-direction: column; aspect-ratio: 2.5/3.5; 
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
         .card-item:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-color: #cbd5e1; z-index: 2; }
         
         .card-item.secret { border: 2px solid var(--warning); }
-        .secret-badge { position: absolute; top: 0; right: 0; background: var(--warning); color: white; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 0 var(--radius-sm) 0 var(--radius-sm); z-index: 3; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .secret-badge { position: absolute; top: 0; right: 0; background: var(--warning); color: white; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 0 var(--radius-sm) 0 var(--radius-sm); z-index: 3; }
         
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         
         .status-toggle { 
-            position: absolute; 
-            top: 6px; 
-            left: 6px; 
-            font-size: 11px; 
-            width: 24px; 
-            height: 24px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: white; 
-            font-weight: 700; 
-            z-index: 3; 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2); 
-            transition: 0.2s; 
-            backdrop-filter: blur(4px); 
+            position: absolute; top: 6px; left: 6px; font-size: 11px; width: 24px; height: 24px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; z-index: 3; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2); transition: 0.2s; backdrop-filter: blur(4px); 
         }
         .status-toggle:hover { transform: scale(1.15); }
         .owned .card-img { filter: grayscale(0%); opacity: 1; }
@@ -203,18 +155,8 @@
         .not-owned .status-toggle { background: rgba(239, 68, 68, 0.9); }
         
         .card-mini-info { 
-            position: absolute; 
-            bottom: 0; 
-            left: 0; 
-            width: 100%; 
-            background: rgba(255, 255, 255, 0.92); 
-            backdrop-filter: blur(4px);
-            padding: 5px; 
-            text-align: center; 
-            font-size: 11px; 
-            font-weight: 700; 
-            color: var(--dark); 
-            border-top: 1px solid var(--border); 
+            position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(4px);
+            padding: 5px; text-align: center; font-size: 11px; font-weight: 700; color: var(--dark); border-top: 1px solid var(--border); 
         }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(6px); justify-content: center; align-items: center; z-index: 9999; padding: 20px; overflow-y: auto; }
@@ -230,23 +172,16 @@
         .detail-value { color: var(--dark); text-align: right; font-weight: 700; }
         
         .app-section { display: none; width: 100%; max-width: 900px; }
-        
-        .header-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            background: var(--surface);
-            padding: 16px 24px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: var(--surface); padding: 16px 24px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); }
+
+        /* Picker List Style inside Modal */
+        .picker-list { max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-top: 15px; margin-bottom: 20px; }
+        .picker-item { padding: 10px 14px; background: #f8fafc; border: 1.5px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 13px; color: var(--dark); transition: 0.2s; text-align: left; }
+        .picker-item:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
     </style>
 </head>
 <body>
 
-<!-- หน้า Login / Register -->
 <div class="container" id="authSection" style="max-width: 400px; margin-top: 60px;">
     <h2>✨ PHOTOCARD VAULT</h2>
     <div class="sub-title" style="margin-bottom: 25px;">เข้าสู่ระบบเพื่อจัดการคอลเลกชันของคุณ</div>
@@ -256,7 +191,6 @@
     <button class="btn-block btn-outline" onclick="handleAuth('register')">✨ สมัครสมาชิกใหม่</button>
 </div>
 
-<!-- หน้าหลักแอปพลิเคชัน -->
 <div id="mainAppSection" class="app-section">
     <div class="header-actions">
         <button onclick="renderAddForm()" class="btn-success" style="margin:0;">➕ เพิ่มการ์ดใหม่</button>
@@ -265,16 +199,14 @@
     <div class="container" id="appContent" style="background: var(--surface);"></div>
 </div>
 
-<!-- Modal แสดงรายละเอียดและแก้ไข -->
+<!-- Modal ทั่วไป (ดูรายละเอียด / แก้ไขการ์ด) -->
 <div id="modal" class="modal-overlay" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
-        
-        <!-- โหมดดูข้อมูล -->
         <div id="viewMode">
-            <div style="background:#0f172a; border-radius:var(--radius-sm); padding:12px; display:flex; justify-content:center; margin-bottom: 20px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);">
+            <div style="background:#0f172a; border-radius:var(--radius-sm); padding:12px; display:flex; justify-content:center; margin-bottom: 20px;">
                 <img id="m-img" src="" style="border-radius:6px; object-fit: cover; max-height: 280px; max-width: 100%;">
             </div>
-            <div style="color:var(--primary); font-size:11px; font-weight:800; letter-spacing: 0.5px; margin-bottom:4px;" id="m-col"></div>
+            <div style="color:var(--primary); font-size:11px; font-weight:800; margin-bottom:4px;" id="m-col"></div>
             <div style="font-size:22px; font-weight:800; color:var(--dark); line-height: 1.2;" id="m-name"></div>
             <div style="font-size:13px; color:#64748b; margin-bottom:18px; font-weight:600;" id="m-num"></div>
             
@@ -288,14 +220,15 @@
             <button onclick="closeModal()" class="btn-block btn-outline" style="margin-top:10px;">ปิดหน้าต่าง</button>
         </div>
 
-        <!-- โหมดแก้ไขข้อมูล -->
         <div id="editMode" style="display:none;">
             <h3 style="margin-top:0; color: var(--dark); font-size: 20px;">✏️ แก้ไขข้อมูลการ์ด</h3>
             <form onsubmit="saveEditData(event)">
                 <div class="form-group">
                     <label>📁 ชื่อคอลเลกชัน</label>
-                    <input type="text" id="editColName" list="editColList" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" required autocomplete="off">
-                    <datalist id="editColList"></datalist>
+                    <div class="input-with-btn">
+                        <input type="text" id="editColName" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" required>
+                        <button type="button" class="btn-select" onclick="openPicker('editColName', 'collection')">📌 เลือก</button>
+                    </div>
                 </div>
                 
                 <div style="display:flex; gap:12px;">
@@ -304,17 +237,21 @@
                 </div>
                 <div class="form-group">
                     <label>ชื่องาน (Event)</label>
-                    <input type="text" id="editEvent" list="editEventList" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" autocomplete="off">
-                    <datalist id="editEventList"></datalist>
+                    <div class="input-with-btn">
+                        <input type="text" id="editEvent" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+                        <button type="button" class="btn-select" onclick="openPicker('editEvent', 'event')">📌 เลือก</button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>แฮชแท็ก</label>
-                    <input type="text" id="editHashtag" list="editHashtagList" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" autocomplete="off">
-                    <datalist id="editHashtagList"></datalist>
+                    <div class="input-with-btn">
+                        <input type="text" id="editHashtag" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+                        <button type="button" class="btn-select" onclick="openPicker('editHashtag', 'hashtag')">📌 เลือก</button>
+                    </div>
                 </div>
                 
                 <div class="form-group">
-                    <label>📸 เปลี่ยนรูปภาพใหม่ (เว้นว่างถ้าใช้รูปเดิม)</label>
+                    <label>📸 เปลี่ยนรูปใหม่ (เว้นว่างถ้าใช้รูปเดิม)</label>
                     <input type="file" id="editCardFile" accept="image/*">
                 </div>
                 
@@ -328,7 +265,15 @@
                 </div>
             </form>
         </div>
+    </div>
+</div>
 
+<!-- Modal แยกพิเศษสำหรับเลือกข้อมูลเดิม (Picker Popup) -->
+<div id="pickerModal" class="modal-overlay" onclick="closePicker()" style="z-index: 10000;">
+    <div class="modal-content" onclick="event.stopPropagation()" style="width: 360px;">
+        <h3 id="pickerTitle" style="margin-top:0; font-size: 18px; color: var(--dark);">เลือกข้อมูล</h3>
+        <div id="pickerContainer" class="picker-list"></div>
+        <button onclick="closePicker()" class="btn-block btn-secondary" style="margin-top: 10px;">ปิด</button>
     </div>
 </div>
 
@@ -336,33 +281,23 @@
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
     const SUPABASE_URL = "https://qkkcgtniefzdxyrktbzj.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFra2NndG5pZWZ6ZHh5cmt0YnpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2NTExODN9.hJ5-xL7dYf5d52-example-key-placeholder"; // (ใส่คีย์จริงของคุณตรงนี้)
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFra2NndG5pZWZ6ZHh5cmt0YnpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2NTExODN9.hJ5-xL7dYf5d52-example-key-placeholder"; // ใส่ Key ของคุณ
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let currentUser = null, myCards = [];
     let currentFilter = 'all', searchQuery = '';
     let currentCardId = null;
+    let activeTargetInput = null;
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) {
-            currentUser = session.user;
-            toggleAuthView(true);
-            loadData();
-        } else {
-            toggleAuthView(false);
-        }
+        if (session) { currentUser = session.user; toggleAuthView(true); loadData(); }
+        else { toggleAuthView(false); }
     });
 
     supabase.auth.onAuthStateChange((event, session) => {
-        if (session) {
-            currentUser = session.user;
-            toggleAuthView(true);
-            loadData();
-        } else {
-            currentUser = null;
-            toggleAuthView(false);
-        }
+        if (session) { currentUser = session.user; toggleAuthView(true); loadData(); }
+        else { currentUser = null; toggleAuthView(false); }
     });
 
     function toggleAuthView(isLoggedIn) {
@@ -373,7 +308,7 @@
     window.handleAuth = async (type) => {
         const email = document.getElementById('authEmail').value.trim();
         const password = document.getElementById('authPassword').value;
-        if(!email || !password) return alert('กรุณากรอกอีเมลและรหัสผ่านให้ครบถ้วน');
+        if(!email || !password) return alert('กรุณากรอกอีเมลและรหัสผ่าน');
         
         if(type === 'login') {
             const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -381,7 +316,7 @@
         } else {
             const { error } = await supabase.auth.signUp({ email, password });
             if(error) alert("สมัครสมาชิกไม่สำเร็จ: " + error.message);
-            else alert('✨ สมัครสมาชิกสำเร็จ! ระบบเข้าสู่ระบบให้ทันที');
+            else alert('✨ สมัครสมาชิกสำเร็จ!');
         }
     }
 
@@ -389,24 +324,13 @@
 
     async function loadData() {
         if (!currentUser) return;
-        const { data, error } = await supabase
-            .from('my_cards')
-            .select('*')
-            .eq('user_id', currentUser.id);
-
-        if (error) { console.error('Error loading data:', error); return; }
+        const { data, error } = await supabase.from('my_cards').select('*').eq('user_id', currentUser.id);
+        if (error) return;
 
         myCards = data.map(d => ({
-            id: d.id,
-            userId: d.user_id,
-            collectionName: d.collection_name,
-            cardName: d.card_name,
-            cardNumber: d.card_number,
-            event: d.event,
-            hashtag: d.hashtag,
-            isSecret: d.is_secret,
-            imageUrl: d.image_url,
-            isOwned: d.is_owned
+            id: d.id, userId: d.user_id, collectionName: d.collection_name,
+            cardName: d.card_name, cardNumber: d.card_number, event: d.event,
+            hashtag: d.hashtag, isSecret: d.is_secret, imageUrl: d.image_url, isOwned: d.is_owned
         }));
 
         if(document.getElementById('inpColName')) return; 
@@ -435,56 +359,43 @@
         `;
 
         if(allColNames.length === 0) {
-            html += `<div style="text-align:center; padding:60px 20px; color:#94a3b8; font-weight:500;">ยังไม่มีข้อมูลการ์ด กดปุ่ม <b>"➕ เพิ่มการ์ดใหม่"</b> ด้านบนเพื่อเริ่มต้นใช้งานได้เลยครับ</div>`;
+            html += `<div style="text-align:center; padding:60px 20px; color:#94a3b8; font-weight:500;">ยังไม่มีข้อมูลการ์ด กดปุ่ม <b>"➕ เพิ่มการ์ดใหม่"</b> ด้านบนเพื่อเริ่มต้น</div>`;
         }
 
         allColNames.forEach(colName => {
             let cardsInCol = myCards.filter(c => c.collectionName === colName);
-            
             cardsInCol = cardsInCol.filter(c => (c.cardName.toLowerCase().includes(searchQuery) || (c.cardNumber && c.cardNumber.toLowerCase().includes(searchQuery))));
             if (currentFilter === 'owned') cardsInCol = cardsInCol.filter(c => c.isOwned);
             if (currentFilter === 'missing') cardsInCol = cardsInCol.filter(c => !c.isOwned);
-            
             cardsInCol.sort((a, b) => (parseInt(a.cardNumber) || 0) - (parseInt(b.cardNumber) || 0));
 
             if (cardsInCol.length > 0) {
                 const ownedInCol = cardsInCol.filter(c => c.isOwned).length;
                 html += `
                     <div class="collection-section">
-                        <div class="collection-title">
-                            📁 ${colName} <span style="color:#64748b; font-weight:600; font-size: 13px;">(${ownedInCol}/${cardsInCol.length})</span>
-                        </div>
+                        <div class="collection-title">📁 ${colName} <span style="color:#64748b; font-weight:600; font-size: 13px;">(${ownedInCol}/${cardsInCol.length})</span></div>
                         <div class="template-grid">
                 `;
 
                 cardsInCol.forEach(c => {
                     const secretClass = c.isSecret ? 'secret' : '';
                     const secretBadge = c.isSecret ? `<div class="secret-badge">★ SECRET</div>` : '';
-                    
                     html += `
                         <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" onclick="openModal('${c.id}')">
                             ${secretBadge}
-                            <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})" title="คลิกเปลี่ยนสถานะการมีอยู่">
-                                ${c.isOwned ? '✓' : '!'}
-                            </div>
+                            <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">${c.isOwned ? '✓' : '!'}</div>
                             <img src="${c.imageUrl}" class="card-img" loading="lazy">
-                            <div class="card-mini-info">${c.cardNumber ? `No. ${c.cardNumber}` : (c.cardName.length > 10 ? c.cardName.substring(0,10)+'..' : c.cardName)}</div>
+                            <div class="card-mini-info">${c.cardNumber ? `No. ${c.cardNumber}` : c.cardName}</div>
                         </div>
                     `;
                 });
-
                 html += `</div></div>`;
             }
         });
-
         container.innerHTML = html;
     }
 
     window.renderAddForm = () => {
-        const uniqueCols = [...new Set(myCards.map(c => c.collectionName).filter(Boolean))];
-        const uniqueEvents = [...new Set(myCards.map(c => c.event).filter(Boolean))];
-        const uniqueHashtags = [...new Set(myCards.map(c => c.hashtag).filter(Boolean))];
-        
         document.getElementById('appContent').innerHTML = `
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
                 <h3 style="margin:0; font-size: 20px; color: var(--dark);">➕ เพิ่มการ์ดใหม่เข้าคอลเลกชัน</h3>
@@ -493,24 +404,31 @@
             <form onsubmit="saveData(event)">
                 <div class="form-group">
                     <label>📁 ชื่อคอลเลกชัน</label>
-                    <input type="text" id="inpColName" list="colList" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" required autocomplete="off" placeholder="เช่น ALBUM 1, SPECIAL VER">
-                    <datalist id="colList">${uniqueCols.map(c => `<option value="${c}">`).join('')}</datalist>
+                    <div class="input-with-btn">
+                        <input type="text" id="inpColName" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" required placeholder="เช่น ALBUM 1">
+                        <button type="button" class="btn-select" onclick="openPicker('inpColName', 'collection')">📌 เลือก</button>
+                    </div>
                 </div>
                 
                 <div style="display:flex; gap:12px;">
-                    <div class="form-group" style="flex:1;"><label>🔢 หมายเลขการ์ด</label><input type="text" id="inpCardNum" placeholder="เช่น 01"></div>
-                    <div class="form-group" style="flex:2;"><label>🃏 ชื่อการ์ด</label><input type="text" id="inpCardName" required placeholder="เช่น Ver. A Selfie"></div>
+                    <div class="form-group" style="flex:1;"><label>🔢 หมายเลข</label><input type="text" id="inpCardNum" placeholder="01"></div>
+                    <div class="form-group" style="flex:2;"><label>🃏 ชื่อการ์ด</label><input type="text" id="inpCardName" required placeholder="Ver. A"></div>
                 </div>
 
                 <div class="form-group">
                     <label>ชื่องาน (Event)</label>
-                    <input type="text" id="inpEvent" list="eventList" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" autocomplete="off" placeholder="เช่น WITHMUU FANSIGN">
-                    <datalist id="eventList">${uniqueEvents.map(e => `<option value="${e}">`).join('')}</datalist>
+                    <div class="input-with-btn">
+                        <input type="text" id="inpEvent" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" placeholder="เช่น FANSIGN">
+                        <button type="button" class="btn-select" onclick="openPicker('inpEvent', 'event')">📌 เลือก</button>
+                    </div>
                 </div>
+                
                 <div class="form-group">
                     <label>แฮชแท็ก</label>
-                    <input type="text" id="inpHashtag" list="hashtagList" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" autocomplete="off" placeholder="เช่น #BENEFIT">
-                    <datalist id="hashtagList">${uniqueHashtags.map(h => `<option value="${h}">`).join('')}</datalist>
+                    <div class="input-with-btn">
+                        <input type="text" id="inpHashtag" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" placeholder="#BENEFIT">
+                        <button type="button" class="btn-select" onclick="openPicker('inpHashtag', 'hashtag')">📌 เลือก</button>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -520,7 +438,7 @@
                 
                 <div style="background: #fffbeb; padding: 12px; border-radius: var(--radius-sm); border: 1px solid #fef3c7; margin: 15px 0;">
                     <label style="display:flex; align-items:center; gap:10px; font-weight:700; color:var(--dark); cursor:pointer; margin:0;">
-                        <input type="checkbox" id="inpIsSecret" style="width:18px; height:18px; accent-color: var(--warning);"> 🌟 ตั้งเป็น Secret Card (ขอบทอง)
+                        <input type="checkbox" id="inpIsSecret" style="width:18px; height:18px; accent-color: var(--warning);"> 🌟 Secret Card (ขอบทอง)
                     </label>
                 </div>
 
@@ -535,33 +453,68 @@
         `;
     }
 
+    // ฟังก์ชันเปิด Picker Popup เลือกข้อมูลเดิม
+    window.openPicker = (inputId, type) => {
+        activeTargetInput = inputId;
+        const titleEl = document.getElementById('pickerTitle');
+        const container = document.getElementById('pickerContainer');
+        
+        let items = [];
+        if (type === 'collection') {
+            titleEl.innerText = '📁 เลือกชื่อคอลเลกชัน';
+            items = [...new Set(myCards.map(c => c.collectionName).filter(Boolean))].sort();
+        } else if (type === 'event') {
+            titleEl.innerText = '📅 เลือกชื่องาน (Event)';
+            items = [...new Set(myCards.map(c => c.event).filter(Boolean))].sort();
+        } else if (type === 'hashtag') {
+            titleEl.innerText = '🏷️ เลือกแฮชแท็ก';
+            items = [...new Set(myCards.map(c => c.hashtag).filter(Boolean))].sort();
+        }
+
+        if (items.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:20px; color:#94a3b8; font-size:13px;">ยังไม่มีประวัติข้อมูลส่วนนี้</div>`;
+        } else {
+            container.innerHTML = items.map(item => `
+                <div class="picker-item" onclick="selectPickerItem('${item}')">${item}</div>
+            `).join('');
+        }
+
+        document.getElementById('pickerModal').style.display = 'flex';
+    }
+
+    window.selectPickerItem = (val) => {
+        if (activeTargetInput) {
+            document.getElementById(activeTargetInput).value = val;
+        }
+        closePicker();
+    }
+
+    window.closePicker = () => {
+        document.getElementById('pickerModal').style.display = 'none';
+    }
+
     window.saveData = async (e) => {
         e.preventDefault();
         const btn = document.getElementById('btnSave');
         btn.disabled = true; btn.innerText = '⏳ กำลังอัปโหลดและบันทึก...';
 
-        const colName = document.getElementById('inpColName').value.trim().toUpperCase();
-        const eventName = document.getElementById('inpEvent').value.trim().toUpperCase();
-        const hashtagName = document.getElementById('inpHashtag').value.trim().toUpperCase();
-        const cardFile = document.getElementById('inpCardFile').files[0];
-
         try {
+            const cardFile = document.getElementById('inpCardFile').files[0];
             const filePath = `${currentUser.id}/${Date.now()}_card`;
             const { error: uploadError } = await supabase.storage.from('cards').upload(filePath, cardFile);
             if (uploadError) throw uploadError;
 
             const { data: publicUrlData } = supabase.storage.from('cards').getPublicUrl(filePath);
-            const cardUrl = publicUrlData.publicUrl;
 
             const { error: insertError } = await supabase.from('my_cards').insert([{
                 user_id: currentUser.id,
-                collection_name: colName,
+                collection_name: document.getElementById('inpColName').value.trim().toUpperCase(),
                 card_name: document.getElementById('inpCardName').value.trim(),
                 card_number: document.getElementById('inpCardNum').value.trim(),
-                event: eventName,
-                hashtag: hashtagName,
+                event: document.getElementById('inpEvent').value.trim().toUpperCase(),
+                hashtag: document.getElementById('inpHashtag').value.trim().toUpperCase(),
                 is_secret: document.getElementById('inpIsSecret').checked,
-                image_url: cardUrl,
+                image_url: publicUrlData.publicUrl,
                 is_owned: document.getElementById('inpIsOwned').checked
             }]);
 
@@ -571,21 +524,14 @@
             await loadData();
             renderHome();
         } catch (error) {
-            console.error(error); alert('เกิดข้อผิดพลาด: ' + error.message);
+            alert('เกิดข้อผิดพลาด: ' + error.message);
         } finally { btn.disabled = false; btn.innerText = '📥 บันทึกข้อมูลการ์ด'; }
     }
 
     window.toggleOwnership = async (e, cardId, currentStatus) => {
         e.stopPropagation(); 
-        const { error } = await supabase
-            .from('my_cards')
-            .update({ is_owned: !currentStatus })
-            .eq('id', cardId);
-            
-        if (!error) {
-            await loadData();
-            renderHome();
-        }
+        const { error } = await supabase.from('my_cards').update({ is_owned: !currentStatus }).eq('id', cardId);
+        if (!error) { await loadData(); renderHome(); }
     }
 
     window.openModal = (id) => {
@@ -609,15 +555,6 @@
     window.toggleEditMode = (isEdit) => {
         if(isEdit) {
             const c = myCards.find(x => x.id === currentCardId);
-            
-            const uniqueCols = [...new Set(myCards.map(card => card.collectionName).filter(Boolean))];
-            const uniqueEvents = [...new Set(myCards.map(card => card.event).filter(Boolean))];
-            const uniqueHashtags = [...new Set(myCards.map(card => card.hashtag).filter(Boolean))];
-            
-            document.getElementById('editColList').innerHTML = uniqueCols.map(col => `<option value="${col}">`).join('');
-            document.getElementById('editEventList').innerHTML = uniqueEvents.map(ev => `<option value="${ev}">`).join('');
-            document.getElementById('editHashtagList').innerHTML = uniqueHashtags.map(hash => `<option value="${hash}">`).join('');
-            
             document.getElementById('editColName').value = c.collectionName || '';
             document.getElementById('editCardNum').value = c.cardNumber || '';
             document.getElementById('editCardName').value = c.cardName || '';
@@ -641,7 +578,6 @@
         
         try {
             const editFile = document.getElementById('editCardFile').files[0];
-            
             let updateData = {
                 collection_name: document.getElementById('editColName').value.trim().toUpperCase(),
                 card_number: document.getElementById('editCardNum').value.trim(),
@@ -652,20 +588,14 @@
             };
 
             if (editFile) {
-                btn.innerText = '📸 กำลังอัปโหลดรูปใหม่...';
                 const filePath = `${currentUser.id}/${Date.now()}_card`;
                 const { error: uploadError } = await supabase.storage.from('cards').upload(filePath, editFile);
                 if (uploadError) throw uploadError;
-
                 const { data: publicUrlData } = supabase.storage.from('cards').getPublicUrl(filePath);
                 updateData.image_url = publicUrlData.publicUrl;
             }
 
-            const { error: updateError } = await supabase
-                .from('my_cards')
-                .update(updateData)
-                .eq('id', currentCardId);
-
+            const { error: updateError } = await supabase.from('my_cards').update(updateData).eq('id', currentCardId);
             if (updateError) throw updateError;
             
             alert('✅ อัปเดตข้อมูลสำเร็จ!');
@@ -680,14 +610,13 @@
     }
 
     window.deleteCard = async () => {
-        if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบการ์ดใบนี้ออกจากระบบอย่างถาวร?')) {
+        if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบการ์ดใบนี้?')) {
             try { 
                 const { error } = await supabase.from('my_cards').delete().eq('id', currentCardId);
                 if (error) throw error;
-                
                 await loadData();
                 closeModal(); 
-                alert('🗑️ ลบการ์ดสำเร็จ!'); 
+                alert('🗑️ ลบสำเร็จ!'); 
                 renderHome();
             } catch (err) { 
                 alert('เกิดข้อผิดพลาด: ' + err.message); 
