@@ -133,9 +133,9 @@
         
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         
-        /* แก้ไขจุดซ่อนรูป ให้เบลอที่ตัวรูปภาพของการ์ดโดยตรง */
-        .cards-hidden .card-img { filter: blur(14px) grayscale(100%); opacity: 0.15; }
-        .cards-hidden .card-mini-info { background: var(--dark); color: white; }
+        /* ซ่อนรูปภาพเมื่อเปิดใช้งาน */
+        .card-item.hidden-img .card-img { filter: blur(16px) grayscale(100%); opacity: 0.1; }
+        .card-item.hidden-img .card-mini-info { background: var(--dark); color: white; }
 
         .status-toggle { 
             position: absolute; top: 6px; left: 6px; font-size: 11px; width: 24px; height: 24px; border-radius: 50%; 
@@ -380,14 +380,15 @@
                                 ${isHidden ? '🔽' : '🔼'}
                             </button>
                         </div>
-                        <div class="template-grid ${isHidden ? 'cards-hidden' : ''}">
+                        <div class="template-grid">
                 `;
 
                 cardsInCol.forEach(c => {
                     const secretClass = c.isSecret ? 'secret' : '';
                     const secretBadge = c.isSecret ? `<div class="secret-badge">★ SECRET</div>` : '';
+                    const hideClass = isHidden ? 'hidden-img' : '';
                     html += `
-                        <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" onclick="openModal('${c.id}')">
+                        <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass} ${hideClass}" onclick="openModal('${c.id}')">
                             ${secretBadge}
                             <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">${c.isOwned ? '✓' : '!'}</div>
                             <img src="${c.imageUrl}" class="card-img" loading="lazy">
@@ -516,7 +517,7 @@
                 hashtag: document.getElementById('inpHashtag').value.trim().toUpperCase(),
                 is_secret: document.getElementById('inpIsSecret').checked,
                 image_url: publicUrlData.publicUrl,
-                is_owned: document.getElementById('inpIsOwned').checked
+                is_owned: document.getElementById('inpIsOwned'].checked
             }]);
 
             if (insertError) throw insertError;
