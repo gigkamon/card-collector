@@ -60,45 +60,25 @@
         label { display: block; margin-bottom: 6px; font-weight: 600; color: #475569; font-size: 13px; }
         
         input[type="text"], input[type="email"], input[type="password"] { 
-            width: 100%; 
-            padding: 12px 16px; 
-            border: 2px solid var(--border); 
-            border-radius: var(--radius-sm); 
-            font-size: 14px; 
-            outline: none; 
-            transition: all 0.2s;
-            background: #fff;
+            width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); 
+            font-size: 14px; outline: none; transition: all 0.2s; background: #fff;
         }
         input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px var(--primary-light);
+            border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light);
         }
 
         .input-with-btn { display: flex; gap: 8px; }
         .input-with-btn input { flex: 1; }
 
         input[type="file"] { 
-            width: 100%; 
-            padding: 12px; 
-            background: #f8fafc; 
-            border-radius: var(--radius-sm); 
-            border: 2px dashed #cbd5e1; 
-            cursor: pointer; 
-            font-size: 13px;
+            width: 100%; padding: 12px; background: #f8fafc; border-radius: var(--radius-sm); 
+            border: 2px dashed #cbd5e1; cursor: pointer; font-size: 13px;
         }
         
         button { 
-            border: none; 
-            border-radius: var(--radius-sm); 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: all 0.2s; 
-            font-size: 14px; 
-            padding: 12px 20px; 
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            border: none; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; 
+            transition: all 0.2s; font-size: 14px; padding: 12px 20px; display: inline-flex;
+            align-items: center; justify-content: center; gap: 8px;
         }
         button:active { transform: scale(0.98); }
         
@@ -123,11 +103,20 @@
         .filter-btn.active { background: var(--dark); color: white; border-color: var(--dark); }
 
         .collection-section { margin-bottom: 35px; width: 100%; }
+        .collection-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 14px;
+        }
         .collection-title { 
-            color: var(--dark); font-size: 15px; font-weight: 700; margin-bottom: 14px; text-align: left; 
-            display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border); padding-bottom: 8px;
+            color: var(--dark); font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin: 0;
         }
         
+        .btn-toggle-view {
+            background: #f1f5f9; border: 1px solid var(--border); color: #475569;
+            font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; cursor: pointer; transition: 0.2s;
+        }
+        .btn-toggle-view:hover { background: #e2e8f0; color: var(--dark); }
+
         .template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 14px; }
         @media (min-width: 640px) { .template-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); } }
 
@@ -143,6 +132,10 @@
         
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         
+        /* สไตล์เวลาซ่อนรูป */
+        .cards-hidden .card-img { filter: blur(12px) grayscale(100%); opacity: 0.2; }
+        .cards-hidden .card-mini-info { background: var(--dark); color: white; }
+
         .status-toggle { 
             position: absolute; top: 6px; left: 6px; font-size: 11px; width: 24px; height: 24px; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; z-index: 3; 
@@ -174,7 +167,6 @@
         .app-section { display: none; width: 100%; max-width: 900px; }
         .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: var(--surface); padding: 16px 24px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); }
 
-        /* Picker List Style inside Modal */
         .picker-list { max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-top: 15px; margin-bottom: 20px; }
         .picker-item { padding: 10px 14px; background: #f8fafc; border: 1.5px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 13px; color: var(--dark); transition: 0.2s; text-align: left; }
         .picker-item:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
@@ -199,7 +191,7 @@
     <div class="container" id="appContent" style="background: var(--surface);"></div>
 </div>
 
-<!-- Modal ทั่วไป (ดูรายละเอียด / แก้ไขการ์ด) -->
+<!-- Modal ทั่วไป -->
 <div id="modal" class="modal-overlay" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
         <div id="viewMode">
@@ -268,7 +260,7 @@
     </div>
 </div>
 
-<!-- Modal แยกพิเศษสำหรับเลือกข้อมูลเดิม (Picker Popup) -->
+<!-- Modal Picker -->
 <div id="pickerModal" class="modal-overlay" onclick="closePicker()" style="z-index: 10000;">
     <div class="modal-content" onclick="event.stopPropagation()" style="width: 360px;">
         <h3 id="pickerTitle" style="margin-top:0; font-size: 18px; color: var(--dark);">เลือกข้อมูล</h3>
@@ -281,7 +273,7 @@
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
     const SUPABASE_URL = "https://qkkcgtniefzdxyrktbzj.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFra2NndG5pZWZ6ZHh5cmt0YnpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNzA5MTEsImV4cCI6MjEwNjg0NjkxMX0.4mhliYG0SpTKqhWz4JkvukPRTupaxdMZZHodNCUTjtc"; // ใส่ Key ของคุณ
+    const SUPABASE_ANON_KEY = "sb_publishable_uPZ-JgEky9iRX6kqXpILk8_8lRyyQk1"; // ใส่ Key ของคุณตรงนี้
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -289,6 +281,7 @@
     let currentFilter = 'all', searchQuery = '';
     let currentCardId = null;
     let activeTargetInput = null;
+    let hiddenCollections = {};
 
     supabase.auth.getSession().then(({ data: { session } }) => {
         if (session) { currentUser = session.user; toggleAuthView(true); loadData(); }
@@ -340,6 +333,11 @@
     window.setFilter = (filter) => { currentFilter = filter; renderHome(); }
     window.setSearch = (val) => { searchQuery = val.toLowerCase(); renderHome(); }
 
+    window.toggleHideCollection = (colName) => {
+        hiddenCollections[colName] = !hiddenCollections[colName];
+        renderHome();
+    }
+
     window.renderHome = () => {
         const container = document.getElementById('appContent');
         const allColNames = [...new Set(myCards.map(c => c.collectionName))].sort(); 
@@ -371,10 +369,17 @@
 
             if (cardsInCol.length > 0) {
                 const ownedInCol = cardsInCol.filter(c => c.isOwned).length;
+                const isHidden = hiddenCollections[colName] || false;
+                
                 html += `
                     <div class="collection-section">
-                        <div class="collection-title">📁 ${colName} <span style="color:#64748b; font-weight:600; font-size: 13px;">(${ownedInCol}/${cardsInCol.length})</span></div>
-                        <div class="template-grid">
+                        <div class="collection-header">
+                            <div class="collection-title">📁 ${colName} <span style="color:#64748b; font-weight:600; font-size: 13px;">(${ownedInCol}/${cardsInCol.length})</span></div>
+                            <button class="btn-toggle-view" onclick="toggleHideCollection('${colName}')">
+                                ${isHidden ? '👁️ แสดงรูป' : '🙈 ซ่อนรูป'}
+                            </button>
+                        </div>
+                        <div class="template-grid ${isHidden ? 'cards-hidden' : ''}">
                 `;
 
                 cardsInCol.forEach(c => {
@@ -453,7 +458,6 @@
         `;
     }
 
-    // ฟังก์ชันเปิด Picker Popup เลือกข้อมูลเดิม
     window.openPicker = (inputId, type) => {
         activeTargetInput = inputId;
         const titleEl = document.getElementById('pickerTitle');
@@ -483,15 +487,11 @@
     }
 
     window.selectPickerItem = (val) => {
-        if (activeTargetInput) {
-            document.getElementById(activeTargetInput).value = val;
-        }
+        if (activeTargetInput) { document.getElementById(activeTargetInput).value = val; }
         closePicker();
     }
 
-    window.closePicker = () => {
-        document.getElementById('pickerModal').style.display = 'none';
-    }
+    window.closePicker = () => { document.getElementById('pickerModal').style.display = 'none'; }
 
     window.saveData = async (e) => {
         e.preventDefault();
@@ -584,7 +584,7 @@
                 card_name: document.getElementById('editCardName').value.trim(),
                 event: document.getElementById('editEvent').value.trim().toUpperCase(),
                 hashtag: document.getElementById('editHashtag').value.trim().toUpperCase(),
-                is_secret: document.getElementById('editIsSecret').checked
+                is_secret: document.getElementById('editIsSecret'].checked
             };
 
             if (editFile) {
