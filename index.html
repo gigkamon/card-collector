@@ -308,18 +308,12 @@
                 
                 <div class="form-group">
                     <label>🔢 หมายเลข</label>
-                    <div class="input-with-btn">
-                        <input type="text" id="editCardNum">
-                        <button type="button" class="btn-select" onclick="openPicker('editCardNum', 'number', 'editColName')">📌 เลือก</button>
-                    </div>
+                    <input type="text" id="editCardNum">
                 </div>
 
                 <div class="form-group">
                     <label>🃏 ชื่อการ์ด</label>
-                    <div class="input-with-btn">
-                        <input type="text" id="editCardName" required>
-                        <button type="button" class="btn-select" onclick="openPicker('editCardName', 'cardname', 'editColName')">📌 เลือก</button>
-                    </div>
+                    <input type="text" id="editCardName" required>
                 </div>
 
                 <div class="form-group">
@@ -526,18 +520,12 @@
                 
                 <div class="form-group">
                     <label>🔢 หมายเลข</label>
-                    <div class="input-with-btn">
-                        <input type="text" id="inpCardNum" placeholder="01">
-                        <button type="button" class="btn-select" onclick="openPicker('inpCardNum', 'number', 'inpColName')">📌 เลือก</button>
-                    </div>
+                    <input type="text" id="inpCardNum" placeholder="01">
                 </div>
 
                 <div class="form-group">
                     <label>🃏 ชื่อการ์ด</label>
-                    <div class="input-with-btn">
-                        <input type="text" id="inpCardName" required placeholder="Ver. A">
-                        <button type="button" class="btn-select" onclick="openPicker('inpCardName', 'cardname', 'inpColName')">📌 เลือก</button>
-                    </div>
+                    <input type="text" id="inpCardName" required placeholder="Ver. A">
                 </div>
 
                 <div class="form-group">
@@ -578,7 +566,7 @@
         `;
     }
 
-    window.openPicker = (inputId, type, colInputId = null) => {
+    window.openPicker = (inputId, type) => {
         activeTargetInput = inputId;
         const titleEl = document.getElementById('pickerTitle');
         const container = document.getElementById('pickerContainer');
@@ -593,16 +581,6 @@
         } else if (type === 'hashtag') {
             titleEl.innerText = '🏷️ เลือกแฮชแท็ก';
             items = [...new Set(myCards.map(c => c.hashtag).filter(Boolean))].sort();
-        } else if (type === 'number') {
-            titleEl.innerText = '🔢 เลือกหมายเลข';
-            let colName = colInputId ? document.getElementById(colInputId).value.trim().toUpperCase() : '';
-            let filtered = colName ? myCards.filter(c => c.collectionName === colName) : myCards;
-            items = [...new Set(filtered.map(c => c.cardNumber).filter(Boolean))].sort((a, b) => (parseInt(a) || 0) - (parseInt(b) || 0));
-        } else if (type === 'cardname') {
-            titleEl.innerText = '🃏 เลือกชื่อการ์ด';
-            let colName = colInputId ? document.getElementById(colInputId).value.trim().toUpperCase() : '';
-            let filtered = colName ? myCards.filter(c => c.collectionName === colName) : myCards;
-            items = [...new Set(filtered.map(c => c.cardName).filter(Boolean))].sort();
         }
 
         if (items.length === 0) {
