@@ -271,7 +271,7 @@
 </div>
 
 <div id="mainAppSection" class="app-section">
-    <div class="header-actions">
+    <div class="header-actions" id="headerActions">
         <button onclick="renderAddForm()" class="btn-success" style="margin:0;">➕ เพิ่มการ์ดใหม่</button>
         <button onclick="handleLogout()" class="btn-outline" style="margin:0;">🚪 ออกจากระบบ</button>
     </div>
@@ -460,6 +460,10 @@
     window.setSearch = (val) => { searchQuery = val.toLowerCase(); renderHome(); }
 
     window.renderHome = () => {
+        // แสดงปุ่มเมนูด้านบนกลับมาเมื่ออยู่หน้าแรก
+        const headerActions = document.getElementById('headerActions');
+        if (headerActions) headerActions.style.display = 'flex';
+
         const container = document.getElementById('appContent');
         const allColNames = [...new Set(myCards.map(c => c.collectionName))].sort(); 
         
@@ -531,6 +535,10 @@
     }
 
     window.renderAddForm = () => {
+        // ซ่อนปุ่มเมนูด้านบนเมื่อเข้ามาหน้าเพิ่มการ์ด
+        const headerActions = document.getElementById('headerActions');
+        if (headerActions) headerActions.style.display = 'none';
+
         document.getElementById('appContent').innerHTML = `
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;">
                 <h3 style="margin:0; font-size: 20px; color: var(--dark); font-weight: 800;">➕ เพิ่มการ์ดใหม่</h3>
