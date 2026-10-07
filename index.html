@@ -164,15 +164,15 @@
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
             gap: 16px; 
+            align-items: start;
         }
         @media (min-width: 520px) { .template-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
-        @media (min-width: 768px) { .template-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; } }
+        @media (min-width: 768px) { .template-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; } }
 
-        /* ล็อกสัดส่วนกรอบการ์ดด้านนอกให้เท่ากันเป๊ะทุกใบ (Standard Card Aspect Ratio 3:4) */
+        /* การ์ดด้านนอก: กำหนดความกว้างมาตรฐาน แต่ปล่อยความสูงยืดหยุ่นตามแนวตั้ง/แนวนอนของรูป */
         .card-item { 
             background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-md); overflow: hidden; 
-            cursor: pointer; position: relative; display: flex; flex-direction: column; 
-            aspect-ratio: 3 / 4.1; 
+            cursor: pointer; position: relative; display: flex; flex-direction: column; width: 100%;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
         .card-item:hover { transform: translateY(-6px); box-shadow: var(--shadow); border-color: var(--primary); z-index: 2; }
@@ -182,7 +182,6 @@
         
         .card-img-wrapper {
             width: 100%;
-            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -190,13 +189,15 @@
             overflow: hidden;
             position: relative;
         }
+        /* รูปภาพปรับขนาดตามสัดส่วนจริง */
         .card-img { 
             width: 100%; 
-            height: 100%; 
-            object-fit: cover; /* เติมเต็มกรอบเท่ากันทุกใบสวยงาม */
+            height: auto; 
+            display: block;
+            object-fit: contain; 
             transition: transform 0.4s ease; 
         }
-        .card-item:hover .card-img { transform: scale(1.06); }
+        .card-item:hover .card-img { transform: scale(1.04); }
         
         .status-toggle { 
             position: absolute; top: 10px; left: 10px; font-size: 11px; width: 28px; height: 28px; border-radius: 50%; 
@@ -210,7 +211,7 @@
         .not-owned .status-toggle { background: rgba(239, 68, 68, 0.9); }
         
         .card-mini-info { 
-            position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(8px);
+            width: 100%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(8px);
             padding: 8px; text-align: center; font-size: 11px; font-weight: 700; color: #fff; border-top: 1px solid rgba(255,255,255,0.1); 
         }
 
