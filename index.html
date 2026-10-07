@@ -15,13 +15,13 @@
             --danger: #ef4444; 
             --dark: #0f172a; 
             --text: #475569;
-            --bg: #f1f5f9;
+            --bg: #f8fafc;
             --surface: #ffffff;
             --border: #e2e8f0;
             --radius-lg: 24px;
             --radius-md: 16px;
             --radius-sm: 10px;
-            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 5px 15px -5px rgba(0, 0, 0, 0.02);
         }
 
         [data-theme="dark"] {
@@ -33,10 +33,10 @@
             --danger: #f87171; 
             --dark: #f8fafc; 
             --text: #94a3b8;
-            --bg: #07090e;
+            --bg: #090d16;
             --surface: #111827;
             --border: #1f293d;
-            --shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.7);
+            --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
         }
 
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.25s, border-color 0.25s, color 0.25s, box-shadow 0.25s; }
@@ -45,7 +45,7 @@
             background: var(--bg); 
             color: var(--text); 
             margin: 0; 
-            padding: 20px 16px; 
+            padding: 24px 16px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
@@ -66,7 +66,7 @@
             background: var(--surface);
             border: 1.5px solid var(--border);
             color: var(--dark);
-            padding: 10px 18px;
+            padding: 10px 20px;
             border-radius: 50px;
             font-size: 13px;
             font-weight: 700;
@@ -83,16 +83,16 @@
             width: 100%; 
             max-width: 960px; 
             border-radius: var(--radius-lg); 
-            padding: 30px; 
+            padding: 32px; 
             box-shadow: var(--shadow); 
             border: 1px solid var(--border);
             margin-bottom: 24px; 
-            animation: fadeIn 0.4s ease-out;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @media (min-width: 640px) {
-            body { padding: 30px; }
-            .container { padding: 40px; }
+            body { padding: 32px; }
+            .container { padding: 44px; }
         }
 
         @keyframes fadeIn {
@@ -101,7 +101,7 @@
         }
         
         h2 { color: var(--dark); margin-top: 0; text-align: center; font-weight: 800; font-size: 28px; letter-spacing: -0.5px; }
-        .sub-title { text-align: center; font-size: 13px; color: var(--text); margin-top: -4px; margin-bottom: 30px; font-weight: 500; opacity: 0.8; }
+        .sub-title { text-align: center; font-size: 13px; color: var(--text); margin-top: -4px; margin-bottom: 32px; font-weight: 500; opacity: 0.8; }
         
         .form-group { margin-bottom: 20px; text-align: left; }
         label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--dark); font-size: 13px; }
@@ -150,7 +150,7 @@
         .search-input:focus { border-color: var(--primary); background: var(--surface); box-shadow: 0 0 0 4px var(--primary-light); }
         
         .filter-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-        .filter-btn { padding: 10px 20px; border-radius: 50px; border: 2px solid var(--border); background: var(--surface); color: var(--text); font-size: 13px; font-weight: 700; }
+        .filter-btn { padding: 10px 22px; border-radius: 50px; border: 2px solid var(--border); background: var(--surface); color: var(--text); font-size: 13px; font-weight: 700; }
         .filter-btn:hover { border-color: var(--primary); color: var(--dark); }
         .filter-btn.active { background: var(--dark); color: var(--surface); border-color: var(--dark); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 
@@ -168,10 +168,11 @@
         @media (min-width: 520px) { .template-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
         @media (min-width: 768px) { .template-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; } }
 
-        /* ปรับแต่งการ์ดให้รองรับทั้งแนวตั้งและแนวนอนอัตโนมัติ */
+        /* ล็อกสัดส่วนกรอบการ์ดด้านนอกให้เท่ากันเป๊ะทุกใบ (Standard Card Aspect Ratio 3:4) */
         .card-item { 
             background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-md); overflow: hidden; 
             cursor: pointer; position: relative; display: flex; flex-direction: column; 
+            aspect-ratio: 3 / 4.1; 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
         .card-item:hover { transform: translateY(-6px); box-shadow: var(--shadow); border-color: var(--primary); z-index: 2; }
@@ -181,19 +182,21 @@
         
         .card-img-wrapper {
             width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #000000;
+            background: #020617;
             overflow: hidden;
+            position: relative;
         }
         .card-img { 
             width: 100%; 
             height: 100%; 
-            object-fit: contain; /* ปรับให้เห็นรูปเต็มใบตามสัดส่วนจริง */
+            object-fit: cover; /* เติมเต็มกรอบเท่ากันทุกใบสวยงาม */
             transition: transform 0.4s ease; 
         }
-        .card-item:hover .card-img { transform: scale(1.04); }
+        .card-item:hover .card-img { transform: scale(1.06); }
         
         .status-toggle { 
             position: absolute; top: 10px; left: 10px; font-size: 11px; width: 28px; height: 28px; border-radius: 50%; 
@@ -207,12 +210,12 @@
         .not-owned .status-toggle { background: rgba(239, 68, 68, 0.9); }
         
         .card-mini-info { 
-            width: 100%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(8px);
+            position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(8px);
             padding: 8px; text-align: center; font-size: 11px; font-weight: 700; color: #fff; border-top: 1px solid rgba(255,255,255,0.1); 
         }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 7, 12, 0.8); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 9999; padding: 16px; overflow-y: auto; }
-        .modal-content { background: var(--surface); color: var(--dark); padding: 28px; border-radius: var(--radius-lg); max-width: 100%; width: 480px; position: relative; margin: auto; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6); border: 1.5px solid var(--border); animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .modal-content { background: var(--surface); color: var(--dark); padding: 32px; border-radius: var(--radius-lg); max-width: 100%; width: 480px; position: relative; margin: auto; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6); border: 1.5px solid var(--border); animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 
         @keyframes scaleUp {
             from { opacity: 0; transform: scale(0.92); }
@@ -220,9 +223,9 @@
         }
 
         .modal-image-container {
-            background: #020617; border-radius: var(--radius-md); padding: 14px; display: flex; justify-content: center; align-items: center; position: relative; margin-bottom: 22px; min-height: 280px; max-height: 400px; width: 100%; overflow: hidden; box-shadow: inset 0 2px 12px rgba(0,0,0,0.6);
+            background: #020617; border-radius: var(--radius-md); padding: 14px; display: flex; justify-content: center; align-items: center; position: relative; margin-bottom: 22px; height: 360px; width: 100%; overflow: hidden; box-shadow: inset 0 2px 12px rgba(0,0,0,0.6);
         }
-        .modal-img { max-width: 100%; max-height: 360px; object-fit: contain; border-radius: 10px; }
+        .modal-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; }
 
         .modal-nav-btn {
             position: absolute; top: 50%; transform: translateY(-50%);
@@ -480,18 +483,12 @@
                 cardsInCol.forEach(c => {
                     const secretClass = c.isSecret ? 'secret' : '';
                     const secretBadge = c.isSecret ? `<div class="secret-badge">★ SECRET</div>` : '';
-                    
-                    // ตรวจสอบสัดส่วนรูปภาพเพื่อปรับให้เป็นการ์ดแนวตั้งหรือแนวนอนอัตโนมัติ
-                    const img = new Image();
-                    img.src = c.imageUrl;
-                    // ใช้ onload หรือกำหนด class พื้นฐานไว้ก่อน (ค่าเริ่มต้นเป็นแนวตั้ง, หากโหลดแล้วพบว่าเป็นแนวนอนจะปรับสัดส่วนกล่องให้พอดี)
-                    
                     html += `
                         <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" onclick="openModal('${c.id}')">
                             ${secretBadge}
                             <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">${c.isOwned ? '✓' : '!'}</div>
-                            <div class="card-img-wrapper" id="wrap-${c.id}">
-                                <img src="${c.imageUrl}" class="card-img" loading="lazy" onload="checkCardOrientation(this, '${c.id}')">
+                            <div class="card-img-wrapper">
+                                <img src="${c.imageUrl}" class="card-img" loading="lazy">
                             </div>
                             <div class="card-mini-info">${c.cardNumber ? `No. ${c.cardNumber}` : c.cardName}</div>
                         </div>
@@ -501,24 +498,6 @@
             }
         });
         container.innerHTML = html;
-    }
-
-    // ฟังก์ชันตรวจสอบและปรับสัดส่วนการ์ดอัตโนมัติ (แนวตั้ง/แนวนอน)
-    window.checkCardOrientation = (imgElement, cardId) => {
-        const wrapper = document.getElementById(`wrap-${cardId}`);
-        if (!wrapper) return;
-        const cardItem = wrapper.closest('.card-item');
-        if (!cardItem) return;
-
-        if (imgElement.naturalWidth > imgElement.naturalHeight) {
-            // รูปแนวนอน
-            cardItem.style.aspectRatio = '4.2 / 3';
-            wrapper.style.height = '100%';
-        } else {
-            // รูปแนวตั้ง
-            cardItem.style.aspectRatio = '3 / 4.2';
-            wrapper.style.height = '100%';
-        }
     }
 
     window.renderAddForm = () => {
@@ -558,7 +537,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>📸 รูปภาพของการ์ด (รองรับทั้งแนวตั้งและแนวนอน)</label>
+                    <label>📸 รูปภาพของการ์ด</label>
                     <input type="file" id="inpCardFile" accept="image/*" required>
                 </div>
                 
@@ -660,9 +639,7 @@
         const c = myCards.find(x => x.id === id);
         if(!c) return;
         
-        const modalImg = document.getElementById('m-img');
-        modalImg.src = c.imageUrl;
-        
+        document.getElementById('m-img').src = c.imageUrl;
         document.getElementById('m-col').innerText = (c.collectionName || '').toUpperCase();
         document.getElementById('m-name').innerText = c.cardName;
         document.getElementById('m-num').innerText = c.cardNumber ? `No. ${c.cardNumber}` : '';
