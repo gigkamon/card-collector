@@ -167,7 +167,6 @@
             align-items: flex-start;
         }
 
-        /* ปรับความสูงมาตรฐานให้เล็กลงกะทัดรัด (150px) */
         .card-item { 
             background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-md); overflow: hidden; 
             cursor: pointer; position: relative; display: flex; flex-direction: column;
@@ -175,7 +174,6 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
         
-        /* สัดส่วนความกว้างตามขนาดจริง 2.5:3.5 และ 3.5:2.5 เมื่อเทียบกับความสูง 150px */
         .card-item.portrait { width: calc((150px / 3.5) * 2.5); }
         .card-item.landscape { width: calc((150px / 2.5) * 3.5); }
 
@@ -249,8 +247,11 @@
         .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: var(--surface); padding: 20px 28px; border-radius: var(--radius-lg); box-shadow: var(--shadow); border: 1px solid var(--border); }
 
         .picker-list { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-top: 15px; margin-bottom: 20px; }
-        .picker-item { padding: 12px 18px; background: var(--bg); border: 2px solid var(--border); border-radius: var(--radius-md); cursor: pointer; font-weight: 700; font-size: 13px; color: var(--dark); transition: 0.2s; text-align: left; }
+        .picker-item-row { display: flex; gap: 8px; align-items: center; }
+        .picker-item { flex: 1; padding: 12px 18px; background: var(--bg); border: 2px solid var(--border); border-radius: var(--radius-md); cursor: pointer; font-weight: 700; font-size: 13px; color: var(--dark); transition: 0.2s; text-align: left; }
         .picker-item:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+        .picker-del-btn { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 2px solid var(--border); padding: 0 14px; height: 46px; border-radius: var(--radius-md); font-size: 14px; cursor: pointer; transition: 0.2s; }
+        .picker-del-btn:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
     </style>
 </head>
 <body data-theme="dark">
@@ -383,6 +384,7 @@
     let currentFilter = 'all', searchQuery = '';
     let currentCardId = null;
     let activeTargetInput = null;
+    let currentPickerType = null;
 
     window.toggleTheme = () => {
         const body = document.body;
@@ -460,7 +462,6 @@
     window.setSearch = (val) => { searchQuery = val.toLowerCase(); renderHome(); }
 
     window.renderHome = () => {
-        // แสดงปุ่มเมนูด้านบนกลับมาเมื่ออยู่หน้าแรก
         const headerActions = document.getElementById('headerActions');
         if (headerActions) headerActions.style.display = 'flex';
 
@@ -535,7 +536,6 @@
     }
 
     window.renderAddForm = () => {
-        // ซ่อนปุ่มเมนูด้านบนเมื่อเข้ามาหน้าเพิ่มการ์ด
         const headerActions = document.getElementById('headerActions');
         if (headerActions) headerActions.style.display = 'none';
 
@@ -610,23 +610,29 @@
 
     window.openPicker = (inputId, type) => {
         activeTargetInput = inputId;
+        currentPickerType = type;
+        renderPickerItems();
+        document.getElementById('pickerModal').style.display = 'flex';
+    }
+
+    function renderPickerItems() {
         const titleEl = document.getElementById('pickerTitle');
         const container = document.getElementById('pickerContainer');
         
         let items = [];
-        if (type === 'collection') {
+        if (currentPickerType === 'collection') {
             titleEl.innerText = '📁 เลือกชื่อคอลเลกชัน';
             items = [...new Set(myCards.map(c => c.collectionName).filter(Boolean))].sort();
-        } else if (type === 'event') {
+        } else if (currentPickerType === 'event') {
             titleEl.innerText = '📅 เลือกชื่องาน (Event)';
             items = [...new Set(myCards.map(c => c.event).filter(Boolean))].sort();
-        } else if (type === 'hashtag') {
+        } else if (currentPickerType === 'hashtag') {
             titleEl.innerText = '🏷️ เลือกแฮชแท็ก';
             items = [...new Set(myCards.map(c => c.hashtag).filter(Boolean))].sort();
-        } else if (type === 'number') {
+        } else if (currentPickerType === 'number') {
             titleEl.innerText = '🔢 เลือกหมายเลข (ทุกคอลเลกชัน)';
             items = [...new Set(myCards.map(c => c.cardNumber).filter(Boolean))].sort((a, b) => (parseInt(a) || 0) - (parseInt(b) || 0));
-        } else if (type === 'cardname') {
+        } else if (currentPickerType === 'cardname') {
             titleEl.innerText = '🃏 เลือกชื่อการ์ด (ทุกคอลเลกชัน)';
             items = [...new Set(myCards.map(c => c.cardName).filter(Boolean))].sort();
         }
@@ -635,16 +641,41 @@
             container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text); font-size:13px; font-weight:600;">ยังไม่มีประวัติข้อมูลส่วนนี้</div>`;
         } else {
             container.innerHTML = items.map(item => `
-                <div class="picker-item" onclick="selectPickerItem('${item}')">${item}</div>
+                <div class="picker-item-row">
+                    <div class="picker-item" onclick="selectPickerItem('${item}')">${item}</div>
+                    <button type="button" class="picker-del-btn" onclick="deletePickerItem('${currentPickerType}', '${item}')">🗑️</button>
+                </div>
             `).join('');
         }
-
-        document.getElementById('pickerModal').style.display = 'flex';
     }
 
     window.selectPickerItem = (val) => {
         if (activeTargetInput) { document.getElementById(activeTargetInput).value = val; }
         closePicker();
+    }
+
+    window.deletePickerItem = async (type, val) => {
+        if (!confirm(`คุณต้องการลบข้อมูล "${val}" ออกจากประวัติทั้งหมดใช่หรือไม่?`)) return;
+        
+        let queryField = '';
+        if (type === 'collection') queryField = 'collection_name';
+        else if (type === 'event') queryField = 'event';
+        else if (type === 'hashtag') queryField = 'hashtag';
+        else if (type === 'number') queryField = 'card_number';
+        else if (type === 'cardname') queryField = 'card_name';
+
+        if (!queryField) return;
+
+        try {
+            // อัปเดตข้อมูลในการ์ดที่เป็นค่านี้ให้เป็นค่าว่าง
+            const { error } = await supabase.from('my_cards').update({ [queryField]: '' }).eq('user_id', currentUser.id).eq(queryField, val);
+            if (error) throw error;
+
+            await loadData();
+            renderPickerItems();
+        } catch (err) {
+            alert('เกิดข้อผิดพลาด: ' + err.message);
+        }
     }
 
     window.closePicker = () => { document.getElementById('pickerModal').style.display = 'none'; }
