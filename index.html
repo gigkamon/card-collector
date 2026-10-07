@@ -160,25 +160,24 @@
             display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border); padding-bottom: 12px;
         }
         
-        /* จัดกริดให้ขนาดช่องพอดี ไม่กว้างล้นจนเกินไป */
+        /* จัดกริดให้ขนาดช่องสมมาตรและเรียงตัวสวยงาม */
         .template-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+            grid-template-columns: repeat(2, 1fr); 
             gap: 16px; 
-            align-items: start;
+            align-items: stretch;
         }
-        @media (min-width: 640px) {
-            .template-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 18px; }
-        }
+        @media (min-width: 520px) { .template-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
+        @media (min-width: 768px) { .template-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px; } }
 
-        /* ควบคุมขนาดการ์ดตามสัดส่วนมาตรฐานจริง 2.5:3.5 (แนวตั้ง) และ 3.5:2.5 (แนวนอน) ให้ขนาดกะทัดรัดเท่ากันทุกใบ */
+        /* ควบคุมสัดส่วนการ์ดด้านนอกให้สมมาตร (แนวตั้ง 2.5:3.5 และ แนวนอน 3.5:2.5) */
         .card-item { 
             background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-md); overflow: hidden; 
             cursor: pointer; position: relative; display: flex; flex-direction: column; width: 100%;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
-        .card-item.portrait { aspect-ratio: 2.5 / 3.5; }
-        .card-item.landscape { aspect-ratio: 3.5 / 2.5; }
+        .card-item.portrait { aspect-ratio: 2.5 / 3.6; }
+        .card-item.landscape { aspect-ratio: 3.5 / 2.6; }
 
         .card-item:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--primary); z-index: 2; }
         
@@ -506,7 +505,6 @@
         container.innerHTML = html;
     }
 
-    // ตรวจจับสัดส่วนรูปภาพอัตโนมัติ เพื่อปรับขนาดการ์ดให้เป็นแนวตั้ง (portrait) หรือแนวนอน (landscape) อย่างถูกต้อง
     window.detectCardOrientation = (img, cardId) => {
         const cardElement = document.getElementById(`card-${cardId}`);
         if (!cardElement) return;
