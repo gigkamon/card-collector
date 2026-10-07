@@ -19,7 +19,7 @@
             --surface: #ffffff;
             --border: #e2e8f0;
             --radius-lg: 24px;
-            --radius-md: 14px;
+            --radius-md: 18px;
             --radius-sm: 8px;
             --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 5px 15px -5px rgba(0, 0, 0, 0.02);
         }
@@ -163,23 +163,30 @@
         .template-grid { 
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 16px;
             align-items: flex-start;
         }
 
-        /* ล็อกการ์ดด้านนอกให้เป็นแนวตั้งทั้งหมด ขนาดกะทัดรัด (สูง 150px, กว้างตามสัดส่วน 2.5:3.5) */
+        /* ล็อกการ์ดด้านนอกให้เป็นแนวตั้งทั้งหมด ขนาดเท่ากันเป๊ะ */
         .card-item { 
-            background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-md); overflow: hidden; 
-            cursor: pointer; position: relative; display: flex; flex-direction: column;
-            height: 150px; 
-            width: calc((150px / 3.5) * 2.5);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            background: var(--surface); 
+            border: 3px solid var(--primary); 
+            border-radius: var(--radius-md); 
+            overflow: hidden; 
+            cursor: pointer; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column;
+            height: 165px; 
+            width: calc((165px / 3.5) * 2.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            box-shadow: 0 8px 25px rgba(244, 63, 94, 0.15);
         }
 
-        .card-item:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--primary); z-index: 2; }
+        .card-item:hover { transform: translateY(-5px); box-shadow: 0 12px 35px rgba(244, 63, 94, 0.3); z-index: 2; }
         
-        .card-item.secret { border: 2.5px solid var(--warning); }
-        .secret-badge { position: absolute; top: 0; right: 0; background: var(--warning); color: #fff; font-size: 7px; font-weight: 800; padding: 2px 5px; border-radius: 0 var(--radius-sm) 0 var(--radius-sm); z-index: 3; box-shadow: 0 2px 4px rgba(0,0,0,0.25); letter-spacing: 0.5px; }
+        .card-item.secret { border-color: var(--warning); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.25); }
+        .secret-badge { position: absolute; top: 4px; right: 4px; background: var(--warning); color: #fff; font-size: 7px; font-weight: 800; padding: 2px 6px; border-radius: 4px; z-index: 3; box-shadow: 0 2px 6px rgba(0,0,0,0.2); letter-spacing: 0.5px; }
         
         .card-img-wrapper {
             width: 100%;
@@ -191,18 +198,30 @@
             overflow: hidden;
             position: relative;
         }
+        
         .card-img { 
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
             transition: transform 0.4s ease; 
         }
-        .card-item:hover .card-img { transform: scale(1.05); }
+
+        /* ถ้าภาพด้านนอกเป็นแนวนอน ให้หมุนกลับด้าน 90 องศา กลายเป็นแนวตั้งอัตโนมัติ */
+        .card-img.force-rotate {
+            transform: rotate(90deg) scale(1.35);
+        }
+        .card-item:hover .card-img.force-rotate {
+            transform: rotate(90deg) scale(1.42);
+        }
+
+        .card-item:hover .card-img:not(.force-rotate) { 
+            transform: scale(1.05); 
+        }
         
         .status-toggle { 
-            position: absolute; top: 5px; left: 5px; font-size: 8px; width: 20px; height: 20px; border-radius: 50%; 
+            position: absolute; top: 8px; left: 8px; font-size: 9px; width: 22px; height: 22px; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; z-index: 3; 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3); transition: 0.2s; backdrop-filter: blur(4px); 
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3); transition: 0.2s; backdrop-filter: blur(4px); 
         }
         .status-toggle:hover { transform: scale(1.2); }
         .owned .card-img { filter: grayscale(0%); opacity: 1; }
@@ -210,10 +229,7 @@
         .not-owned .card-img { filter: grayscale(100%); opacity: 0.35; }
         .not-owned .status-toggle { background: rgba(239, 68, 68, 0.9); }
         
-        .card-mini-info { 
-            width: 100%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(8px);
-            padding: 4px; text-align: center; font-size: 9px; font-weight: 700; color: #fff; border-top: 1px solid rgba(255,255,255,0.1); 
-        }
+        .card-mini-info { display: none; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 7, 12, 0.8); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 9999; padding: 16px; overflow-y: auto; }
         .modal-content { background: var(--surface); color: var(--dark); padding: 32px; border-radius: var(--radius-lg); max-width: 100%; width: 480px; position: relative; margin: auto; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6); border: 1.5px solid var(--border); animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -509,9 +525,8 @@
                             ${secretBadge}
                             <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">${c.isOwned ? '✓' : '!'}</div>
                             <div class="card-img-wrapper">
-                                <img src="${c.imageUrl}" class="card-img" loading="lazy">
+                                <img src="${c.imageUrl}" class="card-img" loading="lazy" onload="checkAndRotate(this)">
                             </div>
-                            <div class="card-mini-info">${c.cardNumber ? `No. ${c.cardNumber}` : c.cardName}</div>
                         </div>
                     `;
                 });
@@ -519,6 +534,13 @@
             }
         });
         container.innerHTML = html;
+    }
+
+    // ตรวจสอบรูปภาพด้านนอก ถ้าเป็นแนวนอน ให้หมุนกลับด้านเป็นแนวตั้งอัตโนมัติ
+    window.checkAndRotate = (img) => {
+        if (img.naturalWidth > img.naturalHeight) {
+            img.classList.add('force-rotate');
+        }
     }
 
     window.renderAddForm = () => {
