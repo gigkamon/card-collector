@@ -167,15 +167,14 @@
             align-items: flex-start;
         }
 
+        /* ล็อกการ์ดด้านนอกให้เป็นแนวตั้งทั้งหมด ขนาดกะทัดรัด (สูง 150px, กว้างตามสัดส่วน 2.5:3.5) */
         .card-item { 
             background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-md); overflow: hidden; 
             cursor: pointer; position: relative; display: flex; flex-direction: column;
             height: 150px; 
+            width: calc((150px / 3.5) * 2.5);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
-        
-        .card-item.portrait { width: calc((150px / 3.5) * 2.5); }
-        .card-item.landscape { width: calc((150px / 2.5) * 3.5); }
 
         .card-item:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--primary); z-index: 2; }
         
@@ -506,11 +505,11 @@
                     const secretBadge = c.isSecret ? `<div class="secret-badge">★ SECRET</div>` : '';
                     
                     html += `
-                        <div class="card-item portrait ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" id="card-${c.id}" onclick="openModal('${c.id}')">
+                        <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" onclick="openModal('${c.id}')">
                             ${secretBadge}
                             <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">${c.isOwned ? '✓' : '!'}</div>
                             <div class="card-img-wrapper">
-                                <img src="${c.imageUrl}" class="card-img" loading="lazy" onload="detectCardOrientation(this, '${c.id}')">
+                                <img src="${c.imageUrl}" class="card-img" loading="lazy">
                             </div>
                             <div class="card-mini-info">${c.cardNumber ? `No. ${c.cardNumber}` : c.cardName}</div>
                         </div>
@@ -520,19 +519,6 @@
             }
         });
         container.innerHTML = html;
-    }
-
-    window.detectCardOrientation = (img, cardId) => {
-        const cardElement = document.getElementById(`card-${cardId}`);
-        if (!cardElement) return;
-        
-        if (img.naturalWidth > img.naturalHeight) {
-            cardElement.classList.remove('portrait');
-            cardElement.classList.add('landscape');
-        } else {
-            cardElement.classList.remove('landscape');
-            cardElement.classList.add('portrait');
-        }
     }
 
     window.renderAddForm = () => {
@@ -667,7 +653,6 @@
         if (!queryField) return;
 
         try {
-            // อัปเดตข้อมูลในการ์ดที่เป็นค่านี้ให้เป็นค่าว่าง
             const { error } = await supabase.from('my_cards').update({ [queryField]: '' }).eq('user_id', currentUser.id).eq(queryField, val);
             if (error) throw error;
 
