@@ -167,7 +167,7 @@
             align-items: flex-start;
         }
 
-        /* ดีไซน์กรอบการ์ดสไตล์พรีเมียม (ขอบแดงมนโค้ง ขยายเต็มพื้นที่) */
+        /* ดีไซน์กรอบการ์ดสไตล์พรีเมียม (ขอบแดงมนโค้ง ขนาดเท่ากันเป๊ะ) */
         .card-item { 
             background: var(--surface); 
             border: 3px solid var(--primary); 
@@ -194,7 +194,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #020617;
+            background: #090d16;
             overflow: hidden;
             position: relative;
         }
@@ -202,16 +202,19 @@
         .card-img { 
             width: 100%; 
             height: 100%; 
-            object-fit: cover; /* เติมเต็มกรอบรูปด้านนอกพอดีสวยงาม */
+            object-fit: contain; /* ปรับให้เห็นรูปครบถ้วน ไม่โดนตัดหัวหรือตัดขอบ */
             transition: transform 0.4s ease; 
         }
 
-        /* หมุนภาพแนวนอนให้เป็นแนวตั้งและขยายเต็มกรอบพอดี */
+        /* หมุนภาพแนวนอนให้เป็นแนวตั้งพอดีโดยไม่ตัดทอน */
         .card-img.force-rotate {
-            transform: rotate(90deg) scale(1.42);
+            transform: rotate(90deg);
+            max-width: 165px;
+            max-height: 117px;
+            object-fit: contain;
         }
         .card-item:hover .card-img.force-rotate {
-            transform: rotate(90deg) scale(1.5);
+            transform: rotate(90deg) scale(1.05);
         }
 
         .card-item:hover .card-img:not(.force-rotate) { 
