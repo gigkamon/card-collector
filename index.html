@@ -168,10 +168,10 @@
         @media (min-width: 520px) { .template-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
         @media (min-width: 768px) { .template-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; } }
 
+        /* ปรับแต่งการ์ดให้รองรับทั้งแนวตั้งและแนวนอนอัตโนมัติ */
         .card-item { 
             background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-md); overflow: hidden; 
             cursor: pointer; position: relative; display: flex; flex-direction: column; 
-            aspect-ratio: 3 / 4.2; 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
         .card-item:hover { transform: translateY(-6px); box-shadow: var(--shadow); border-color: var(--primary); z-index: 2; }
@@ -181,7 +181,6 @@
         
         .card-img-wrapper {
             width: 100%;
-            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -191,10 +190,10 @@
         .card-img { 
             width: 100%; 
             height: 100%; 
-            object-fit: cover; 
+            object-fit: contain; /* ปรับให้เห็นรูปเต็มใบตามสัดส่วนจริง */
             transition: transform 0.4s ease; 
         }
-        .card-item:hover .card-img { transform: scale(1.06); }
+        .card-item:hover .card-img { transform: scale(1.04); }
         
         .status-toggle { 
             position: absolute; top: 10px; left: 10px; font-size: 11px; width: 28px; height: 28px; border-radius: 50%; 
@@ -208,12 +207,12 @@
         .not-owned .status-toggle { background: rgba(239, 68, 68, 0.9); }
         
         .card-mini-info { 
-            position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(8px);
+            width: 100%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(8px);
             padding: 8px; text-align: center; font-size: 11px; font-weight: 700; color: #fff; border-top: 1px solid rgba(255,255,255,0.1); 
         }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 7, 12, 0.8); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 9999; padding: 16px; overflow-y: auto; }
-        .modal-content { background: var(--surface); color: var(--dark); padding: 28px; border-radius: var(--radius-lg); max-width: 100%; width: 460px; position: relative; margin: auto; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6); border: 1.5px solid var(--border); animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .modal-content { background: var(--surface); color: var(--dark); padding: 28px; border-radius: var(--radius-lg); max-width: 100%; width: 480px; position: relative; margin: auto; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6); border: 1.5px solid var(--border); animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 
         @keyframes scaleUp {
             from { opacity: 0; transform: scale(0.92); }
@@ -221,9 +220,9 @@
         }
 
         .modal-image-container {
-            background: #020617; border-radius: var(--radius-md); padding: 14px; display: flex; justify-content: center; align-items: center; position: relative; margin-bottom: 22px; height: 360px; width: 100%; overflow: hidden; box-shadow: inset 0 2px 12px rgba(0,0,0,0.6);
+            background: #020617; border-radius: var(--radius-md); padding: 14px; display: flex; justify-content: center; align-items: center; position: relative; margin-bottom: 22px; min-height: 280px; max-height: 400px; width: 100%; overflow: hidden; box-shadow: inset 0 2px 12px rgba(0,0,0,0.6);
         }
-        .modal-img { width: 100%; height: 100%; object-fit: contain; border-radius: 10px; }
+        .modal-img { max-width: 100%; max-height: 360px; object-fit: contain; border-radius: 10px; }
 
         .modal-nav-btn {
             position: absolute; top: 50%; transform: translateY(-50%);
@@ -307,20 +306,8 @@
                 </div>
                 
                 <div style="display:flex; gap:12px;">
-                    <div class="form-group" style="flex:1;">
-                        <label>🔢 หมายเลข</label>
-                        <div class="input-with-btn">
-                            <input type="text" id="editCardNum" placeholder="01">
-                            <button type="button" class="btn-select" onclick="openPicker('editCardNum', 'number')">📌 เลือก</button>
-                        </div>
-                    </div>
-                    <div class="form-group" style="flex:2;">
-                        <label>🃏 ชื่อการ์ด</label>
-                        <div class="input-with-btn">
-                            <input type="text" id="editCardName" required placeholder="Ver. A">
-                            <button type="button" class="btn-select" onclick="openPicker('editCardName', 'cardname')">📌 เลือก</button>
-                        </div>
-                    </div>
+                    <div class="form-group" style="flex:1;"><label>🔢 หมายเลข</label><input type="text" id="editCardNum" placeholder="01"></div>
+                    <div class="form-group" style="flex:2;"><label>🃏 ชื่อการ์ด</label><input type="text" id="editCardName" required placeholder="Ver. A"></div>
                 </div>
 
                 <div class="form-group">
@@ -493,12 +480,18 @@
                 cardsInCol.forEach(c => {
                     const secretClass = c.isSecret ? 'secret' : '';
                     const secretBadge = c.isSecret ? `<div class="secret-badge">★ SECRET</div>` : '';
+                    
+                    // ตรวจสอบสัดส่วนรูปภาพเพื่อปรับให้เป็นการ์ดแนวตั้งหรือแนวนอนอัตโนมัติ
+                    const img = new Image();
+                    img.src = c.imageUrl;
+                    // ใช้ onload หรือกำหนด class พื้นฐานไว้ก่อน (ค่าเริ่มต้นเป็นแนวตั้ง, หากโหลดแล้วพบว่าเป็นแนวนอนจะปรับสัดส่วนกล่องให้พอดี)
+                    
                     html += `
                         <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" onclick="openModal('${c.id}')">
                             ${secretBadge}
                             <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">${c.isOwned ? '✓' : '!'}</div>
-                            <div class="card-img-wrapper">
-                                <img src="${c.imageUrl}" class="card-img" loading="lazy">
+                            <div class="card-img-wrapper" id="wrap-${c.id}">
+                                <img src="${c.imageUrl}" class="card-img" loading="lazy" onload="checkCardOrientation(this, '${c.id}')">
                             </div>
                             <div class="card-mini-info">${c.cardNumber ? `No. ${c.cardNumber}` : c.cardName}</div>
                         </div>
@@ -508,6 +501,24 @@
             }
         });
         container.innerHTML = html;
+    }
+
+    // ฟังก์ชันตรวจสอบและปรับสัดส่วนการ์ดอัตโนมัติ (แนวตั้ง/แนวนอน)
+    window.checkCardOrientation = (imgElement, cardId) => {
+        const wrapper = document.getElementById(`wrap-${cardId}`);
+        if (!wrapper) return;
+        const cardItem = wrapper.closest('.card-item');
+        if (!cardItem) return;
+
+        if (imgElement.naturalWidth > imgElement.naturalHeight) {
+            // รูปแนวนอน
+            cardItem.style.aspectRatio = '4.2 / 3';
+            wrapper.style.height = '100%';
+        } else {
+            // รูปแนวตั้ง
+            cardItem.style.aspectRatio = '3 / 4.2';
+            wrapper.style.height = '100%';
+        }
     }
 
     window.renderAddForm = () => {
@@ -526,20 +537,8 @@
                 </div>
                 
                 <div style="display:flex; gap:12px;">
-                    <div class="form-group" style="flex:1;">
-                        <label>🔢 หมายเลข</label>
-                        <div class="input-with-btn">
-                            <input type="text" id="inpCardNum" placeholder="01">
-                            <button type="button" class="btn-select" onclick="openPicker('inpCardNum', 'number')">📌 เลือก</button>
-                        </div>
-                    </div>
-                    <div class="form-group" style="flex:2;">
-                        <label>🃏 ชื่อการ์ด</label>
-                        <div class="input-with-btn">
-                            <input type="text" id="inpCardName" required placeholder="Ver. A">
-                            <button type="button" class="btn-select" onclick="openPicker('inpCardName', 'cardname')">📌 เลือก</button>
-                        </div>
-                    </div>
+                    <div class="form-group" style="flex:1;"><label>🔢 หมายเลข</label><input type="text" id="inpCardNum" placeholder="01"></div>
+                    <div class="form-group" style="flex:2;"><label>🃏 ชื่อการ์ด</label><input type="text" id="inpCardName" required placeholder="Ver. A"></div>
                 </div>
 
                 <div class="form-group">
@@ -559,7 +558,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>📸 รูปภาพของการ์ด</label>
+                    <label>📸 รูปภาพของการ์ด (รองรับทั้งแนวตั้งและแนวนอน)</label>
                     <input type="file" id="inpCardFile" accept="image/*" required>
                 </div>
                 
@@ -595,12 +594,6 @@
         } else if (type === 'hashtag') {
             titleEl.innerText = '🏷️ เลือกแฮชแท็ก';
             items = [...new Set(myCards.map(c => c.hashtag).filter(Boolean))].sort();
-        } else if (type === 'number') {
-            titleEl.innerText = '🔢 เลือกหมายเลข (ทุกคอลเลกชัน)';
-            items = [...new Set(myCards.map(c => c.cardNumber).filter(Boolean))].sort((a, b) => (parseInt(a) || 0) - (parseInt(b) || 0));
-        } else if (type === 'cardname') {
-            titleEl.innerText = '🃏 เลือกชื่อการ์ด (ทุกคอลเลกชัน)';
-            items = [...new Set(myCards.map(c => c.cardName).filter(Boolean))].sort();
         }
 
         if (items.length === 0) {
@@ -667,7 +660,9 @@
         const c = myCards.find(x => x.id === id);
         if(!c) return;
         
-        document.getElementById('m-img').src = c.imageUrl;
+        const modalImg = document.getElementById('m-img');
+        modalImg.src = c.imageUrl;
+        
         document.getElementById('m-col').innerText = (c.collectionName || '').toUpperCase();
         document.getElementById('m-name').innerText = c.cardName;
         document.getElementById('m-num').innerText = c.cardNumber ? `No. ${c.cardNumber}` : '';
