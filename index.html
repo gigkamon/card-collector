@@ -167,16 +167,19 @@
             align-items: start;
         }
         @media (min-width: 520px) { .template-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
-        @media (min-width: 768px) { .template-grid { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 18px; } }
+        @media (min-width: 768px) { .template-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px; } }
 
-        /* การ์ดด้านนอก: สัดส่วนตามขนาดมาตรฐาน 2.5x3.5 (แนวตั้ง) และ 3.5x2.5 (แนวนอน) */
+        /* กำหนดสัดส่วนมาตรฐาน: แนวตั้ง 2.5:3.5 และ แนวนอน 3.5:2.5 */
         .card-item { 
             background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-md); overflow: hidden; 
             cursor: pointer; position: relative; display: flex; flex-direction: column; width: 100%;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
-        .card-item.portrait { aspect-ratio: 2.5 / 3.8; }
-        .card-item.landscape { aspect-ratio: 3.5 / 2.8; }
+        .card-item.portrait { aspect-ratio: 2.5 / 3.6; }
+        .card-item.landscape { aspect-ratio: 3.5 / 2.7; grid-column: span 2; }
+        @media (min-width: 520px) {
+            .card-item.landscape { grid-column: span 2; }
+        }
 
         .card-item:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--primary); z-index: 2; }
         
@@ -504,7 +507,7 @@
         container.innerHTML = html;
     }
 
-    // ตรวจจับรูปภาพอัตโนมัติว่าเป็นแนวตั้งหรือแนวนอน เพื่อปรับสัดส่วนกล่องการ์ดให้ตรงมาตรฐาน 2.5x3.5 หรือ 3.5x2.5
+    // ตรวจจับสัดส่วนรูปภาพอัตโนมัติเพื่อสลับเป็นคลาสแนวตั้ง (portrait) หรือแนวนอน (landscape)
     window.detectCardOrientation = (img, cardId) => {
         const cardElement = document.getElementById(`card-${cardId}`);
         if (!cardElement) return;
@@ -555,7 +558,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>📸 รูปภาพของการ์ด (รองรับทั้งแนวตั้งและแนวนอน)</label>
+                    <label>📸 รูปภาพของการ์ด</label>
                     <input type="file" id="inpCardFile" accept="image/*" required>
                 </div>
                 
