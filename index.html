@@ -160,24 +160,25 @@
             display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border); padding-bottom: 12px;
         }
         
-        /* จัดกริดให้ขนาดช่องสมมาตรและเรียงตัวสวยงาม */
+        /* ใช้ระบบ Flexbox แบบ Wrap ให้การ์ดเรียงต่อกันอย่างเป็นระเบียบและสมมาตร */
         .template-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 16px; 
-            align-items: stretch;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-start;
         }
-        @media (min-width: 520px) { .template-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
-        @media (min-width: 768px) { .template-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px; } }
 
-        /* ควบคุมสัดส่วนการ์ดด้านนอกให้สมมาตร (แนวตั้ง 2.5:3.5 และ แนวนอน 3.5:2.5) */
+        /* ควบคุมความสูงมาตรฐานของการ์ดทุกใบให้เท่ากัน (เช่น 230px) แต่ปรับความกว้างตามสัดส่วนจริง */
         .card-item { 
             background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-md); overflow: hidden; 
-            cursor: pointer; position: relative; display: flex; flex-direction: column; width: 100%;
+            cursor: pointer; position: relative; display: flex; flex-direction: column;
+            height: 230px; /* ล็อกความสูงให้เท่ากันเป๊ะทุกใบ */
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
-        .card-item.portrait { aspect-ratio: 2.5 / 3.6; }
-        .card-item.landscape { aspect-ratio: 3.5 / 2.6; }
+        
+        /* สัดส่วนความกว้างตามขนาดจริง 2.5:3.5 และ 3.5:2.5 เมื่อเทียบกับความสูง 230px */
+        .card-item.portrait { width: calc((230px / 3.5) * 2.5); }
+        .card-item.landscape { width: calc((230px / 2.5) * 3.5); }
 
         .card-item:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--primary); z-index: 2; }
         
