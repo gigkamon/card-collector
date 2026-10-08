@@ -673,7 +673,7 @@
         `;
     }
 
-    // ฟังก์ชันเติมข้อมูลจำค่า Event, Hashtag และ Date แยกตามแต่ละคอลเลกชันอัตโนมัติ
+    // ฟังก์ชันเติมข้อมูล Event, Hashtag และ Date แยกตามแต่ละคอลเลกชันอัตโนมัติ
     window.handleCollectionInput = (val, mode) => {
         const upperVal = val.trim().toUpperCase();
         if (mode === 'add') {
@@ -682,7 +682,6 @@
             document.getElementById('editColName').value = upperVal;
         }
         
-        // ค้นหาการ์ดในคอลเลกชันเดียวกัน เพื่อดึงข้อมูล Event, Hashtag และ Date ที่เคยบันทึกไว้ในคอลเลกชันนั้นๆ มาแสดง
         const collectionCards = myCards.filter(c => c.collectionName === upperVal);
         const latestCard = collectionCards.find(c => c.event || c.hashtag || c.cardDate);
 
