@@ -507,7 +507,24 @@
         if (headerActions) headerActions.style.display = 'flex';
 
         const container = document.getElementById('appContent');
-        const allColNames = [...new Set(myCards.map(c => c.collectionName))].sort(); 
+        
+        // รวบรวมคอลเลกชันทั้งหมด พร้อมคำนวณหาวันที่เก่าที่สุดในแต่ละคอลเลกชันมาใช้จัดเรียงลำดับ
+        let colMap = {};
+        myCards.forEach(c => {
+            if (!colMap[c.collectionName]) {
+                colMap[c.collectionName] = { name: c.collectionName, minDate: c.cardDate || '9999-12-31' };
+            } else {
+                if (c.cardDate && c.cardDate < colMap[c.collectionName].minDate) {
+                    colMap[c.collectionName].minDate = c.cardDate;
+                }
+            }
+        });
+
+        let sortedCols = Object.values(colMap).sort((a, b) => {
+            if (a.minDate !== b.minDate) return a.minDate.localeCompare(b.minDate);
+            return a.name.localeCompare(b.name);
+        });
+        const allColNames = sortedCols.map(col => col.name);
         
         let html = `
             <h2>🌟 PHOTOCARD COLLECTION</h2>
@@ -533,17 +550,8 @@
             if (currentFilter === 'owned') cardsInCol = cardsInCol.filter(c => c.isOwned);
             if (currentFilter === 'missing') cardsInCol = cardsInCol.filter(c => !c.isOwned);
             
-            // จัดเรียงลำดับการ์ดตามวันที่ (ถ้ามี) จากเก่าไปใหม่ ถ้าวันเท่ากันหรือไม่มีให้เรียงตามหมายเลข
-            cardsInCol.sort((a, b) => {
-                if (a.cardDate && b.cardDate) {
-                    return new Date(a.cardDate) - new Date(b.cardDate);
-                } else if (a.cardDate) {
-                    return -1;
-                } else if (b.cardDate) {
-                    return 1;
-                }
-                return (parseInt(a.cardNumber) || 0) - (parseInt(b.cardNumber) || 0);
-            });
+            // เรียงลำดับการ์ดข้างในตามหมายเลขการ์ด (น้อยไปมาก)
+            cardsInCol.sort((a, b) => (parseInt(a.cardNumber) || 0) - (parseInt(b.cardNumber) || 0));
 
             if (cardsInCol.length > 0) {
                 const ownedInCol = cardsInCol.filter(c => c.isOwned).length;
@@ -605,7 +613,7 @@
                 <div class="form-group">
                     <label>📁 ชื่อคอลเลกชัน</label>
                     <div class="input-with-btn">
-                        <input type="text" id="inpColName" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" required placeholder="เช่น ALBUM 1">
+                        <input type="text" id="inpColName" style="text-transform: uppercase;" oninput="handleCollectionInput(this.value)" required placeholder="เช่น ALBUM 1">
                         <button type="button" class="btn-select" onclick="openPicker('inpColName', 'collection')">📌 เลือก</button>
                     </div>
                 </div>
@@ -670,6 +678,22 @@
         `;
     }
 
+    // ฟังก์ชันเติมข้อมูล Hashtag และ Date อัตโนมัติเมื่อพิมพ์หรือเลือกคอลเลกชันซ้ำ
+    window.handleCollectionInput = (val) => {
+        const upperVal = val.trim().toUpperCase();
+        document.getElementById('inpColName').value = upperVal;
+        
+        const existingCard = myCards.find(c => c.collectionName === upperVal);
+        if (existingCard) {
+            if (existingCard.hashtag && !document.getElementById('inpHashtag').value) {
+                document.getElementById('inpHashtag').value = existingCard.hashtag;
+            }
+            if (existingCard.cardDate && !document.getElementById('inpDate').value) {
+                document.getElementById('inpDate').value = existingCard.cardDate;
+            }
+        }
+    }
+
     window.openPicker = (inputId, type) => {
         activeTargetInput = inputId;
         currentPickerType = type;
@@ -712,7 +736,13 @@
     }
 
     window.selectPickerItem = (val) => {
-        if (activeTargetInput) { document.getElementById(activeTargetInput).value = val; }
+        if (activeTargetInput) { 
+            const inputEl = document.getElementById(activeTargetInput);
+            inputEl.value = val; 
+            if (activeTargetInput === 'inpColName') {
+                handleCollectionInput(val);
+            }
+        }
         closePicker();
     }
 
