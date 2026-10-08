@@ -52,7 +52,11 @@
             min-height: 100vh; 
             width: 100%;
             overflow-x: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease; /* เพิ่ม Transition ป้องกันกระพริบตอนสลับโหมด */
+        }
+
+        /* เพิ่ม Transition แค่ตอนกดเปลี่ยนโหมดสี ไม่ให้ทำงานตอนโหลดหน้าแรก */
+        .theme-transition, .theme-transition .container, .theme-transition .theme-toggle-btn {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         .top-bar {
@@ -76,7 +80,6 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s ease;
         }
         .theme-toggle-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
         
@@ -89,7 +92,6 @@
             box-shadow: var(--shadow); 
             border: 1px solid var(--border);
             margin-bottom: 24px; 
-            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         @media (min-width: 640px) {
@@ -126,7 +128,7 @@
         
         button { 
             border: none; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; 
-            transition: all 0.2s; font-size: 14px; padding: 14px 22px; display: inline-flex;
+            transition: transform 0.2s, background-color 0.2s, opacity 0.2s; font-size: 14px; padding: 14px 22px; display: inline-flex;
             align-items: center; justify-content: center; gap: 8px; white-space: nowrap;
         }
         button:active { transform: scale(0.97); }
@@ -166,7 +168,6 @@
             align-items: flex-start;
         }
 
-        /* เพิ่มแอนิเมชันให้ดูสมูทเวลาโหลดข้อมูล */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -182,9 +183,11 @@
             display: flex; 
             flex-direction: column;
             height: 200px; 
-            /* กำหนด Width เริ่มต้นเป็น Portrait เสมอเพื่อป้องกัน Layout กระพริบตอนรูปโหลด */
             width: calc((200px / 3.5) * 2.5); 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            
+            /* แก้กระพริบ: เอาคำว่า 'all' ออก เปลี่ยนเฉพาะสิ่งที่เกี่ยวกับการ hover แทน ป้องกันความกว้างขยายแบบมี animation */
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s, border-color 0.3s; 
+            
             box-shadow: 0 8px 25px rgba(244, 63, 94, 0.15);
             animation: fadeIn 0.4s ease-out forwards;
         }
@@ -293,9 +296,44 @@
         .picker-item:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
         .picker-del-btn { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 2px solid var(--border); padding: 0 14px; height: 46px; border-radius: var(--radius-md); font-size: 14px; cursor: pointer; transition: 0.2s; }
         .picker-del-btn:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+        /* Loader บังหน้าจอตอนรีเฟรช ป้องกันการกระพริบ */
+        #pageLoader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary);
+            transition: opacity 0.4s ease;
+        }
+        .spinner {
+            width: 45px; height: 45px;
+            border: 4px solid var(--primary-light);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body data-theme="dark">
+
+<!-- สคริปต์นี้ใส่ไว้ตรงนี้เพื่อเปลี่ยนสีหน้าเว็บให้ตรงกับ Theme ทันทีก่อนที่จะวาดส่วนอื่นๆ ป้องกันหน้าขาวแวบ -->
+<script>
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.body.setAttribute('data-theme', savedTheme);
+</script>
+
+<!-- Loading Screen -->
+<div id="pageLoader">
+    <div class="spinner"></div>
+    <div style="font-weight: 800; font-size: 15px; color: var(--dark);">กำลังโหลดข้อมูล...</div>
+</div>
 
 <div class="top-bar">
     <button class="theme-toggle-btn" onclick="toggleTheme()">
@@ -303,7 +341,7 @@
     </button>
 </div>
 
-<!-- เพิ่ม display: none; ซ่อนหน้าล็อกอินไว้ก่อน ป้องกันการกระพริบตอนโหลดหน้าแรก -->
+<!-- ซ่อนหน้า Login ไว้ก่อน -->
 <div class="container" id="authSection" style="max-width: 440px; margin-top: 50px; display: none;">
     <h2>✨ PHOTOCARD VAULT</h2>
     <div class="sub-title" style="margin-bottom: 30px;">เข้าสู่ระบบเพื่อจัดการคอลเลกชันของคุณ</div>
@@ -523,6 +561,10 @@
     let activeTargetInput = null;
     let currentPickerType = null;
     let isRendered = false;
+    let isAppInitialized = false;
+
+    // หน่วงเวลาใส่คลาส transition เพื่อไม่ให้ตอนโหลดหน้าแรกสีแวบ
+    setTimeout(() => { document.body.classList.add('theme-transition'); }, 200);
 
     window.toggleTheme = () => {
         const body = document.body;
@@ -545,18 +587,29 @@
         }
     }
 
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.body.setAttribute('data-theme', savedTheme);
-    updateThemeUI(savedTheme);
+    updateThemeUI(document.body.getAttribute('data-theme'));
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) { currentUser = session.user; toggleAuthView(true); loadData(); }
-        else { toggleAuthView(false); }
-    });
+    // ซ่อน Loader เมื่อจัดการข้อมูลเสร็จ
+    function finishLoading() {
+        if (!isAppInitialized) {
+            isAppInitialized = true;
+            const loader = document.getElementById('pageLoader');
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; }, 400);
+        }
+    }
 
-    supabase.auth.onAuthStateChange((event, session) => {
-        if (session) { currentUser = session.user; toggleAuthView(true); loadData(); }
-        else { currentUser = null; toggleAuthView(false); }
+    // จัดการ Auth State
+    supabase.auth.onAuthStateChange(async (event, session) => {
+        if (session) { 
+            currentUser = session.user; 
+            toggleAuthView(true); 
+            await loadData(); 
+        } else { 
+            currentUser = null; 
+            toggleAuthView(false); 
+        }
+        finishLoading();
     });
 
     function toggleAuthView(isLoggedIn) {
@@ -600,7 +653,6 @@
         if (viewName === 'home') {
             document.getElementById('homeView').style.display = 'block';
             document.getElementById('addView').style.display = 'none';
-            // ป้องกันการโหลดโครงสร้างซ้ำซ้อนถ้า render ไปแล้ว
             if(!isRendered) renderHome();
             else filterCards();
         } else if (viewName === 'add') {
@@ -637,7 +689,6 @@
     window.renderHome = () => {
         const container = document.getElementById('collectionContainer');
         
-        // ถ้าเรนเดอร์โครงสร้างหน้าหลักไปแล้ว ให้ใช้ฟังก์ชันซ่อน/แสดงแทน เพื่อไม่ให้หน้าเว็บกระพริบ
         if (isRendered) {
             filterCards();
             return;
@@ -705,7 +756,6 @@
         filterCards();
     }
 
-    // ฟังก์ชันซ่อน/แสดงการ์ดเรียลไทม์ นิ่งสนิทไม่กระพริบ
     window.filterCards = () => {
         const sections = document.querySelectorAll('.collection-section');
 
