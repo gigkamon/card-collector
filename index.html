@@ -52,6 +52,7 @@
             min-height: 100vh; 
             width: 100%;
             overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease; /* เพิ่ม Transition ป้องกันกระพริบตอนสลับโหมด */
         }
 
         .top-bar {
@@ -75,6 +76,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.3s ease;
         }
         .theme-toggle-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
         
@@ -87,6 +89,7 @@
             box-shadow: var(--shadow); 
             border: 1px solid var(--border);
             margin-bottom: 24px; 
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         @media (min-width: 640px) {
@@ -103,6 +106,7 @@
         input[type="text"], input[type="email"], input[type="password"], input[type="date"] { 
             width: 100%; padding: 14px 18px; border: 2px solid var(--border); border-radius: var(--radius-md); 
             font-size: 14px; outline: none; background: var(--bg); color: var(--dark); font-weight: 600;
+            transition: all 0.3s ease;
         }
         input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="date"]:focus {
             border-color: var(--primary);
@@ -116,6 +120,7 @@
         input[type="file"] { 
             width: 100%; padding: 14px; background: var(--bg); border-radius: var(--radius-md); 
             border: 2px dashed var(--border); cursor: pointer; font-size: 13px; color: var(--text);
+            transition: all 0.3s ease;
         }
         input[type="file"]:hover { border-color: var(--primary); }
         
@@ -140,15 +145,15 @@
         .btn-select:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
 
         .tools-bar { display: flex; flex-direction: column; gap: 16px; margin-bottom: 35px; }
-        .search-input { width: 100%; padding: 15px 22px; border-radius: 50px; border: 2px solid var(--border); background: var(--bg); color: var(--dark); outline: none; font-size: 14px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .search-input { width: 100%; padding: 15px 22px; border-radius: 50px; border: 2px solid var(--border); background: var(--bg); color: var(--dark); outline: none; font-size: 14px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.02); transition: all 0.3s ease; }
         .search-input:focus { border-color: var(--primary); background: var(--surface); box-shadow: 0 0 0 4px var(--primary-light); }
         
         .filter-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-        .filter-btn { padding: 10px 22px; border-radius: 50px; border: 2px solid var(--border); background: var(--surface); color: var(--text); font-size: 13px; font-weight: 700; }
+        .filter-btn { padding: 10px 22px; border-radius: 50px; border: 2px solid var(--border); background: var(--surface); color: var(--text); font-size: 13px; font-weight: 700; transition: all 0.3s ease; }
         .filter-btn:hover { border-color: var(--primary); color: var(--dark); }
         .filter-btn.active { background: var(--dark); color: var(--surface); border-color: var(--dark); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 
-        .collection-section { margin-bottom: 40px; width: 100%; }
+        .collection-section { margin-bottom: 40px; width: 100%; animation: fadeIn 0.5s ease-out; }
         .collection-title { 
             color: var(--dark); font-size: 17px; font-weight: 800; margin-bottom: 18px; text-align: left; 
             display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border); padding-bottom: 12px;
@@ -161,6 +166,12 @@
             align-items: flex-start;
         }
 
+        /* เพิ่มแอนิเมชันให้ดูสมูทเวลาโหลดข้อมูล */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .card-item { 
             background: var(--surface); 
             border: 3px solid var(--primary); 
@@ -171,8 +182,11 @@
             display: flex; 
             flex-direction: column;
             height: 200px; 
+            /* กำหนด Width เริ่มต้นเป็น Portrait เสมอเพื่อป้องกัน Layout กระพริบตอนรูปโหลด */
+            width: calc((200px / 3.5) * 2.5); 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             box-shadow: 0 8px 25px rgba(244, 63, 94, 0.15);
+            animation: fadeIn 0.4s ease-out forwards;
         }
 
         .card-item.portrait { width: calc((200px / 3.5) * 2.5); }
@@ -289,7 +303,8 @@
     </button>
 </div>
 
-<div class="container" id="authSection" style="max-width: 440px; margin-top: 50px;">
+<!-- เพิ่ม display: none; ซ่อนหน้าล็อกอินไว้ก่อน ป้องกันการกระพริบตอนโหลดหน้าแรก -->
+<div class="container" id="authSection" style="max-width: 440px; margin-top: 50px; display: none;">
     <h2>✨ PHOTOCARD VAULT</h2>
     <div class="sub-title" style="margin-bottom: 30px;">เข้าสู่ระบบเพื่อจัดการคอลเลกชันของคุณ</div>
     <div class="form-group"><input type="email" id="authEmail" placeholder="อีเมลของคุณ"></div>
@@ -310,7 +325,7 @@
         <div class="sub-title">ระบบจัดการการ์ดสะสมส่วนตัวของคุณ</div>
         
         <div class="tools-bar">
-            <input type="text" class="search-input" placeholder="🔍 ค้นหาชื่อการ์ด หรือ หมายเลข..." id="searchInput" oninput="filterCards()">
+            <input type="text" class="search-input" placeholder="🔍 ค้นหาชื่อการ์ด หรือ หมายเลข..." id="searchInput" oninput="setSearch(this.value)">
             <div class="filter-group">
                 <button class="filter-btn active" id="btn-filter-all" onclick="setFilter('all')">ทั้งหมด</button>
                 <button class="filter-btn" id="btn-filter-owned" onclick="setFilter('owned')">✅ มีแล้ว</button>
@@ -585,7 +600,9 @@
         if (viewName === 'home') {
             document.getElementById('homeView').style.display = 'block';
             document.getElementById('addView').style.display = 'none';
-            renderHome();
+            // ป้องกันการโหลดโครงสร้างซ้ำซ้อนถ้า render ไปแล้ว
+            if(!isRendered) renderHome();
+            else filterCards();
         } else if (viewName === 'add') {
             document.getElementById('homeView').style.display = 'none';
             document.getElementById('addView').style.display = 'block';
