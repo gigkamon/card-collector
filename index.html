@@ -507,7 +507,7 @@
     let currentCardId = null;
     let activeTargetInput = null;
     let currentPickerType = null;
-    let isBuilt = false;
+    let isRendered = false;
 
     window.toggleTheme = () => {
         const body = document.body;
@@ -577,7 +577,7 @@
             hashtag: d.hashtag, cardDate: d.card_date || d.date || '', isSecret: d.is_secret, imageUrl: d.image_url, isOwned: d.is_owned
         }));
 
-        isBuilt = false;
+        isRendered = false; // บังคับสร้างโครงสร้างใหม่เมื่อข้อมูลเปลี่ยน
         renderHome(); 
     }
 
@@ -620,6 +620,12 @@
     window.renderHome = () => {
         const container = document.getElementById('collectionContainer');
         
+        // ถ้าเรนเดอร์โครงสร้างหน้าหลักไปแล้ว ให้ใช้ฟังก์ชันซ่อน/แสดงแทน เพื่อไม่ให้หน้าเว็บกระพริบ
+        if (isRendered) {
+            filterCards();
+            return;
+        }
+
         let colMap = {};
         myCards.forEach(c => {
             if (!colMap[c.collectionName]) {
@@ -660,7 +666,7 @@
                     const formattedNum = c.cardNumber ? (c.cardNumber.toString().padStart(3, '0')) : '---';
                     
                     html += `
-                        <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" id="card-${c.id}" onclick="openModal('${c.id}')" data-name="${c.cardName.toLowerCase()}" data-num="${(c.cardNumber || '').toLowerCase()}" data-owned="${c.isOwned}" data-col="${colName}">
+                        <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" id="card-${c.id}" onclick="openModal('${c.id}')" data-name="${c.cardName.toLowerCase()}" data-num="${(c.cardNumber || '').toLowerCase()}" data-owned="${c.isOwned}">
                             ${secretBadge}
                             <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">${c.isOwned ? '✓' : '!'}</div>
                             <div class="card-img-wrapper">
@@ -678,13 +684,12 @@
         });
         
         container.innerHTML = html;
-        isBuilt = true;
+        isRendered = true;
         filterCards();
     }
 
-    // ฟังก์ชันซ่อน/แสดงการ์ดทันทีโดยไม่ต้องโหลด HTML ใหม่ ป้องกันหน้ากระพริบ
+    // ฟังก์ชันซ่อน/แสดงการ์ดเรียลไทม์ นิ่งสนิทไม่กระพริบ
     window.filterCards = () => {
-        const cards = document.querySelectorAll('.card-item');
         const sections = document.querySelectorAll('.collection-section');
 
         sections.forEach(section => {
@@ -714,7 +719,6 @@
                 if (isOwned) ownedCount++;
             });
 
-            // ซ่อนหัวข้อคอลเลกชันถ้ารวมในการ์ดที่แสดงผลเป็น 0 ใบ
             if (visibleCount === 0) {
                 section.style.display = 'none';
             } else {
@@ -883,7 +887,6 @@
         e.stopPropagation(); 
         const { error } = await supabase.from('my_cards').update({ is_owned: !currentStatus }).eq('id', cardId);
         if (!error) { 
-            // อัปเดตสถานะการ์ดแบบเรียลไทม์โดยไม่ต้องรีโหลดหน้าเว็บทั้งหมด
             const cardEl = document.getElementById(`card-${cardId}`);
             if (cardEl) {
                 cardEl.setAttribute('data-owned', (!currentStatus).toString());
@@ -897,7 +900,6 @@
                     cardEl.querySelector('.status-toggle').innerText = '!';
                 }
             }
-            // อัปเดตข้อมูลในอาเรย์ความจำด้วย
             const target = myCards.find(c => c.id === cardId);
             if (target) target.isOwned = !currentStatus;
             filterCards();
