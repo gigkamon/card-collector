@@ -52,6 +52,7 @@
             min-height: 100vh; 
             width: 100%;
             overflow-x: hidden;
+            overflow-y: scroll; /* บังคับ Scrollbar ให้มีเสมอ เพื่อป้องกันหน้ากระตุก/ขยับซ้ายขวาเวลาสลับหน้าสั้นกับหน้ายาว */
         }
 
         /* เพิ่ม Transition แค่ตอนกดเปลี่ยนโหมดสี ไม่ให้ทำงานตอนโหลดหน้าแรก */
@@ -166,6 +167,15 @@
             flex-wrap: wrap;
             gap: 16px;
             align-items: flex-start;
+        }
+
+        /* Animation เฟดลอยขึ้นมาให้ดูสมูทเวลาโหลดข้อมูล หรือตอนสลับหน้าเว็บ */
+        .view-animate {
+            animation: viewFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes viewFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeIn {
@@ -342,7 +352,7 @@
 </div>
 
 <!-- ซ่อนหน้า Login ไว้ก่อน -->
-<div class="container" id="authSection" style="max-width: 440px; margin-top: 50px; display: none;">
+<div class="container view-animate" id="authSection" style="max-width: 440px; margin-top: 50px; display: none;">
     <h2>✨ PHOTOCARD VAULT</h2>
     <div class="sub-title" style="margin-bottom: 30px;">เข้าสู่ระบบเพื่อจัดการคอลเลกชันของคุณ</div>
     <div class="form-group"><input type="email" id="authEmail" placeholder="อีเมลของคุณ"></div>
@@ -358,7 +368,8 @@
     </div>
     
     <!-- หน้าหลัก แสดงคอลเลกชัน -->
-    <div class="container" id="homeView" style="background: var(--surface);">
+    <!-- ใส่ class="view-animate" ทำให้จังหวะสลับหน้ามีความลื่นไหล เฟดขึ้นมาแบบนิ่มนวล -->
+    <div class="container view-animate" id="homeView" style="background: var(--surface);">
         <h2>🌟 PHOTOCARD COLLECTION</h2>
         <div class="sub-title">ระบบจัดการการ์ดสะสมส่วนตัวของคุณ</div>
         
@@ -374,7 +385,8 @@
     </div>
 
     <!-- หน้าเพิ่มการ์ดใหม่ -->
-    <div class="container" id="addView" style="background: var(--surface); display: none;">
+    <!-- ใส่ class="view-animate" ทำให้จังหวะสลับหน้ามีความลื่นไหล เฟดขึ้นมาแบบนิ่มนวล -->
+    <div class="container view-animate" id="addView" style="background: var(--surface); display: none;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;">
             <h3 style="margin:0; font-size: 20px; color: var(--dark); font-weight: 800;">➕ เพิ่มการ์ดใหม่</h3>
             <button class="btn-outline" onclick="switchView('home')" style="padding: 8px 16px; font-size: 13px;">⬅ ย้อนกลับ</button>
@@ -650,6 +662,9 @@
     }
 
     window.switchView = (viewName) => {
+        // เมื่อมีการกดสลับหน้า ให้เลื่อนกลับไปด้านบนสุดด้วยความนุ่มนวล
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
         if (viewName === 'home') {
             document.getElementById('homeView').style.display = 'block';
             document.getElementById('addView').style.display = 'none';
