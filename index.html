@@ -310,7 +310,7 @@
         <div class="sub-title">ระบบจัดการการ์ดสะสมส่วนตัวของคุณ</div>
         
         <div class="tools-bar">
-            <input type="text" class="search-input" placeholder="🔍 ค้นหาชื่อการ์ด หรือ หมายเลข..." id="searchInput" onkeyup="setSearch(this.value)">
+            <input type="text" class="search-input" placeholder="🔍 ค้นหาชื่อการ์ด หรือ หมายเลข..." id="searchInput" oninput="filterCards()">
             <div class="filter-group">
                 <button class="filter-btn active" id="btn-filter-all" onclick="setFilter('all')">ทั้งหมด</button>
                 <button class="filter-btn" id="btn-filter-owned" onclick="setFilter('owned')">✅ มีแล้ว</button>
@@ -507,7 +507,7 @@
     let currentCardId = null;
     let activeTargetInput = null;
     let currentPickerType = null;
-    let isInitialized = false;
+    let isBuilt = false;
 
     window.toggleTheme = () => {
         const body = document.body;
@@ -577,8 +577,8 @@
             hashtag: d.hashtag, cardDate: d.card_date || d.date || '', isSecret: d.is_secret, imageUrl: d.image_url, isOwned: d.is_owned
         }));
 
-        renderHome();
-        isInitialized = true;
+        isBuilt = false;
+        renderHome(); 
     }
 
     window.switchView = (viewName) => {
@@ -609,10 +609,13 @@
         currentFilter = filter; 
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(`btn-filter-${filter}`).classList.add('active');
-        renderHome(); 
+        filterCards(); 
     }
     
-    window.setSearch = (val) => { searchQuery = val.toLowerCase(); renderHome(); }
+    window.setSearch = (val) => { 
+        searchQuery = val.toLowerCase(); 
+        filterCards(); 
+    }
 
     window.renderHome = () => {
         const container = document.getElementById('collectionContainer');
@@ -642,17 +645,12 @@
         let html = '';
         allColNames.forEach(colName => {
             let cardsInCol = myCards.filter(c => c.collectionName === colName);
-            cardsInCol = cardsInCol.filter(c => (c.cardName.toLowerCase().includes(searchQuery) || (c.cardNumber && c.cardNumber.toLowerCase().includes(searchQuery))));
-            if (currentFilter === 'owned') cardsInCol = cardsInCol.filter(c => c.isOwned);
-            if (currentFilter === 'missing') cardsInCol = cardsInCol.filter(c => !c.isOwned);
-            
             cardsInCol.sort((a, b) => (parseInt(a.cardNumber) || 0) - (parseInt(b.cardNumber) || 0));
 
             if (cardsInCol.length > 0) {
-                const ownedInCol = cardsInCol.filter(c => c.isOwned).length;
                 html += `
-                    <div class="collection-section">
-                        <div class="collection-title">📁 ${colName} <span style="color:var(--text); font-weight:600; font-size: 13px; opacity:0.8;">(${ownedInCol}/${cardsInCol.length})</span></div>
+                    <div class="collection-section" id="section-${colName}">
+                        <div class="collection-title">📁 ${colName} <span class="col-count" id="count-${colName}" style="color:var(--text); font-weight:600; font-size: 13px; opacity:0.8;"></span></div>
                         <div class="template-grid">
                 `;
 
@@ -662,7 +660,7 @@
                     const formattedNum = c.cardNumber ? (c.cardNumber.toString().padStart(3, '0')) : '---';
                     
                     html += `
-                        <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" id="card-${c.id}" onclick="openModal('${c.id}')">
+                        <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" id="card-${c.id}" onclick="openModal('${c.id}')" data-name="${c.cardName.toLowerCase()}" data-num="${(c.cardNumber || '').toLowerCase()}" data-owned="${c.isOwned}" data-col="${colName}">
                             ${secretBadge}
                             <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">${c.isOwned ? '✓' : '!'}</div>
                             <div class="card-img-wrapper">
@@ -679,10 +677,54 @@
             }
         });
         
-        // เช็คว่าเนื้อหาเปลี่ยนไหมก่อนสั่ง innerHTML เพื่อป้องกันการกระพริบ
-        if (container.innerHTML !== html) {
-            container.innerHTML = html;
-        }
+        container.innerHTML = html;
+        isBuilt = true;
+        filterCards();
+    }
+
+    // ฟังก์ชันซ่อน/แสดงการ์ดทันทีโดยไม่ต้องโหลด HTML ใหม่ ป้องกันหน้ากระพริบ
+    window.filterCards = () => {
+        const cards = document.querySelectorAll('.card-item');
+        const sections = document.querySelectorAll('.collection-section');
+
+        sections.forEach(section => {
+            const colName = section.id.replace('section-', '');
+            const sectionCards = section.querySelectorAll('.card-item');
+            let visibleCount = 0;
+            let ownedCount = 0;
+
+            sectionCards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                const num = card.getAttribute('data-num');
+                const isOwned = card.getAttribute('data-owned') === 'true';
+
+                let matchesSearch = name.includes(searchQuery) || num.includes(searchQuery);
+                let matchesFilter = true;
+
+                if (currentFilter === 'owned') matchesFilter = isOwned;
+                if (currentFilter === 'missing') matchesFilter = !isOwned;
+
+                if (matchesSearch && matchesFilter) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+
+                if (isOwned) ownedCount++;
+            });
+
+            // ซ่อนหัวข้อคอลเลกชันถ้ารวมในการ์ดที่แสดงผลเป็น 0 ใบ
+            if (visibleCount === 0) {
+                section.style.display = 'none';
+            } else {
+                section.style.display = 'block';
+                const countEl = document.getElementById(`count-${colName}`);
+                if (countEl) {
+                    countEl.innerText = `(${ownedCount}/${sectionCards.length})`;
+                }
+            }
+        });
     }
 
     window.detectCardOrientation = (img, cardId) => {
@@ -840,7 +882,26 @@
     window.toggleOwnership = async (e, cardId, currentStatus) => {
         e.stopPropagation(); 
         const { error } = await supabase.from('my_cards').update({ is_owned: !currentStatus }).eq('id', cardId);
-        if (!error) { await loadData(); renderHome(); }
+        if (!error) { 
+            // อัปเดตสถานะการ์ดแบบเรียลไทม์โดยไม่ต้องรีโหลดหน้าเว็บทั้งหมด
+            const cardEl = document.getElementById(`card-${cardId}`);
+            if (cardEl) {
+                cardEl.setAttribute('data-owned', (!currentStatus).toString());
+                if (!currentStatus) {
+                    cardEl.classList.remove('not-owned');
+                    cardEl.classList.add('owned');
+                    cardEl.querySelector('.status-toggle').innerText = '✓';
+                } else {
+                    cardEl.classList.remove('owned');
+                    cardEl.classList.add('not-owned');
+                    cardEl.querySelector('.status-toggle').innerText = '!';
+                }
+            }
+            // อัปเดตข้อมูลในอาเรย์ความจำด้วย
+            const target = myCards.find(c => c.id === cardId);
+            if (target) target.isOwned = !currentStatus;
+            filterCards();
+        }
     }
 
     window.openModal = (id) => {
@@ -927,7 +988,6 @@
             alert('✅ อัปเดตข้อมูลสำเร็จ!');
             await loadData();
             closeModal();
-            renderHome();
         } catch (err) { 
             alert('เกิดข้อผิดพลาด: ' + err.message); 
         } finally { 
@@ -943,7 +1003,6 @@
                 await loadData();
                 closeModal(); 
                 alert('🗑️ ลบสำเร็จ!'); 
-                renderHome();
             } catch (err) { 
                 alert('เกิดข้อผิดพลาด: ' + err.message); 
             }
