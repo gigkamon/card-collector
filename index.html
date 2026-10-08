@@ -39,7 +39,7 @@
             --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
         }
 
-        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.25s, border-color 0.25s, color 0.25s, box-shadow 0.25s; }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         
         body { 
             background: var(--bg); 
@@ -87,17 +87,11 @@
             box-shadow: var(--shadow); 
             border: 1px solid var(--border);
             margin-bottom: 24px; 
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @media (min-width: 640px) {
             body { padding: 32px; }
             .container { padding: 44px; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         h2 { color: var(--dark); margin-top: 0; text-align: center; font-weight: 800; font-size: 28px; letter-spacing: -0.5px; }
@@ -305,7 +299,7 @@
 </div>
 
 <div id="mainAppSection" class="app-section">
-    <div class="header-actions" id="headerActions">
+    <div class="header-actions" id="headerActions" style="display: none;">
         <button onclick="renderAddForm()" class="btn-success" style="margin:0;">➕ เพิ่มการ์ดใหม่</button>
         <button onclick="handleLogout()" class="btn-outline" style="margin:0;">🚪 ออกจากระบบ</button>
     </div>
@@ -424,6 +418,7 @@
     let currentCardId = null;
     let activeTargetInput = null;
     let currentPickerType = null;
+    let isDataLoaded = false;
 
     window.toggleTheme = () => {
         const body = document.body;
@@ -493,6 +488,7 @@
             hashtag: d.hashtag, cardDate: d.card_date || d.date || '', isSecret: d.is_secret, imageUrl: d.image_url, isOwned: d.is_owned
         }));
 
+        isDataLoaded = true;
         if(document.getElementById('inpColName')) return; 
         renderHome(); 
     }
@@ -673,7 +669,6 @@
         `;
     }
 
-    // ฟังก์ชันดึงข้อมูลล่าสุดของคอลเลกชัน (เรียงตามข้อมูลที่มีการอัปเดตหรือเพิ่มเข้ามาล่าสุด)
     window.handleCollectionInput = (val, mode) => {
         const upperVal = val.trim().toUpperCase();
         if (mode === 'add') {
@@ -682,12 +677,10 @@
             document.getElementById('editColName').value = upperVal;
         }
         
-        // ค้นหาการ์ดทั้งหมดในคอลเลกชันนี้ และดึงข้อมูลจากการ์ดใบที่มีข้อมูลครบถ้วนล่าสุด
         const collectionCards = myCards.filter(c => c.collectionName === upperVal);
-        if (collectionCards.length > 0) {
-            // เลือกเอาการ์ดใบสุดท้ายในอาเรย์ (หรือใบที่เพิ่งบันทึก/แก้ไขล่าสุด)
-            const latestCard = collectionCards[collectionCards.length - 1];
+        const latestCard = collectionCards.find(c => c.event || c.hashtag || c.cardDate);
 
+        if (latestCard) {
             if (mode === 'add') {
                 if (latestCard.event) document.getElementById('inpEvent').value = latestCard.event;
                 if (latestCard.hashtag) document.getElementById('inpHashtag').value = latestCard.hashtag;
@@ -864,7 +857,6 @@
             document.getElementById('editIsSecret').checked = c.isSecret || false;
             document.getElementById('editCardFile').value = '';
             
-            // ดึงข้อมูลล่าสุดของคอลเลกชันนั้นมาเติมให้อัตโนมัติทันที
             handleCollectionInput(c.collectionName || '', 'edit');
 
             document.getElementById('viewMode').style.display = 'none';
