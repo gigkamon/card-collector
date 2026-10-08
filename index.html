@@ -167,7 +167,6 @@
             align-items: flex-start;
         }
 
-        /* การ์ดสไตล์พรีเมียม ขอบแดงมนโค้ง แสดงข้อมูลไว้ "ด้านใน" กรอบการ์ดส่วนล่าง */
         .card-item { 
             background: var(--surface); 
             border: 3px solid var(--primary); 
@@ -223,7 +222,6 @@
         .not-owned .card-img { filter: grayscale(100%); opacity: 0.35; }
         .not-owned .status-toggle { background: rgba(239, 68, 68, 0.9); }
         
-        /* ข้อมูลซ้อนอยู่ด้านในกรอบการ์ดส่วนล่าง (Glassmorphism Overlay) */
         .card-footer-overlay {
             position: absolute;
             bottom: 0; left: 0; width: 100%;
@@ -508,7 +506,6 @@
 
         const container = document.getElementById('appContent');
         
-        // รวบรวมคอลเลกชันทั้งหมด พร้อมคำนวณหาวันที่เก่าที่สุดในแต่ละคอลเลกชันมาใช้จัดเรียงลำดับ
         let colMap = {};
         myCards.forEach(c => {
             if (!colMap[c.collectionName]) {
@@ -550,7 +547,6 @@
             if (currentFilter === 'owned') cardsInCol = cardsInCol.filter(c => c.isOwned);
             if (currentFilter === 'missing') cardsInCol = cardsInCol.filter(c => !c.isOwned);
             
-            // เรียงลำดับการ์ดข้างในตามหมายเลขการ์ด (น้อยไปมาก)
             cardsInCol.sort((a, b) => (parseInt(a.cardNumber) || 0) - (parseInt(b.cardNumber) || 0));
 
             if (cardsInCol.length > 0) {
@@ -586,7 +582,6 @@
         container.innerHTML = html;
     }
 
-    // ตรวจจับสัดส่วนภาพอัตโนมัติ เพื่อปรับกรอบการ์ดด้านนอกให้เป็นแนวตั้งหรือแนวนอนตามภาพจริงอย่างสมมาตร
     window.detectCardOrientation = (img, cardId) => {
         const cardElement = document.getElementById(`card-${cardId}`);
         if (!cardElement) return;
@@ -678,7 +673,7 @@
         `;
     }
 
-    // ฟังก์ชันเติมข้อมูล Event, Hashtag และ Date อัตโนมัติเมื่อเลือกหรือพิมพ์คอลเลกชัน
+    // ฟังก์ชันเติมข้อมูล Event, Hashtag และ Date อัตโนมัติเมื่อเลือกหรือพิมพ์คอลเลกชัน (รองรับทั้งหน้าเพิ่มและหน้าแก้ไข)
     window.handleCollectionInput = (val, mode) => {
         const upperVal = val.trim().toUpperCase();
         if (mode === 'add') {
@@ -690,13 +685,13 @@
         const existingCard = myCards.find(c => c.collectionName === upperVal);
         if (existingCard) {
             if (mode === 'add') {
-                if (existingCard.event && !document.getElementById('inpEvent').value) document.getElementById('inpEvent').value = existingCard.event;
-                if (existingCard.hashtag && !document.getElementById('inpHashtag').value) document.getElementById('inpHashtag').value = existingCard.hashtag;
-                if (existingCard.cardDate && !document.getElementById('inpDate').value) document.getElementById('inpDate').value = existingCard.cardDate;
+                if (existingCard.event) document.getElementById('inpEvent').value = existingCard.event;
+                if (existingCard.hashtag) document.getElementById('inpHashtag').value = existingCard.hashtag;
+                if (existingCard.cardDate) document.getElementById('inpDate').value = existingCard.cardDate;
             } else {
-                if (existingCard.event && !document.getElementById('editEvent').value) document.getElementById('editEvent').value = existingCard.event;
-                if (existingCard.hashtag && !document.getElementById('editHashtag').value) document.getElementById('editHashtag').value = existingCard.hashtag;
-                if (existingCard.cardDate && !document.getElementById('editDate').value) document.getElementById('editDate').value = existingCard.cardDate;
+                if (existingCard.event) document.getElementById('editEvent').value = existingCard.event;
+                if (existingCard.hashtag) document.getElementById('editHashtag').value = existingCard.hashtag;
+                if (existingCard.cardDate) document.getElementById('editDate').value = existingCard.cardDate;
             }
         }
     }
