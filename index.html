@@ -673,7 +673,7 @@
         `;
     }
 
-    // ฟังก์ชันเติมข้อมูล Event, Hashtag และ Date อัตโนมัติเมื่อเลือกหรือพิมพ์คอลเลกชัน (รองรับทั้งหน้าเพิ่มและหน้าแก้ไข)
+    // ฟังก์ชันเติมข้อมูลจำค่า Event, Hashtag และ Date แยกตามแต่ละคอลเลกชันอัตโนมัติ
     window.handleCollectionInput = (val, mode) => {
         const upperVal = val.trim().toUpperCase();
         if (mode === 'add') {
@@ -682,16 +682,19 @@
             document.getElementById('editColName').value = upperVal;
         }
         
-        const existingCard = myCards.find(c => c.collectionName === upperVal);
-        if (existingCard) {
+        // ค้นหาการ์ดในคอลเลกชันเดียวกัน เพื่อดึงข้อมูล Event, Hashtag และ Date ที่เคยบันทึกไว้ในคอลเลกชันนั้นๆ มาแสดง
+        const collectionCards = myCards.filter(c => c.collectionName === upperVal);
+        const latestCard = collectionCards.find(c => c.event || c.hashtag || c.cardDate);
+
+        if (latestCard) {
             if (mode === 'add') {
-                if (existingCard.event) document.getElementById('inpEvent').value = existingCard.event;
-                if (existingCard.hashtag) document.getElementById('inpHashtag').value = existingCard.hashtag;
-                if (existingCard.cardDate) document.getElementById('inpDate').value = existingCard.cardDate;
+                if (latestCard.event) document.getElementById('inpEvent').value = latestCard.event;
+                if (latestCard.hashtag) document.getElementById('inpHashtag').value = latestCard.hashtag;
+                if (latestCard.cardDate) document.getElementById('inpDate').value = latestCard.cardDate;
             } else {
-                if (existingCard.event) document.getElementById('editEvent').value = existingCard.event;
-                if (existingCard.hashtag) document.getElementById('editHashtag').value = existingCard.hashtag;
-                if (existingCard.cardDate) document.getElementById('editDate').value = existingCard.cardDate;
+                if (latestCard.event) document.getElementById('editEvent').value = latestCard.event;
+                if (latestCard.hashtag) document.getElementById('editHashtag').value = latestCard.hashtag;
+                if (latestCard.cardDate) document.getElementById('editDate').value = latestCard.cardDate;
             }
         }
     }
