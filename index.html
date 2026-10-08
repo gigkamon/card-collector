@@ -163,30 +163,40 @@
         .template-grid { 
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 20px;
             align-items: flex-start;
         }
 
-        /* ดีไซน์กรอบการ์ดพรีเมียม ขอบแดงมนโค้ง คุมความสูงมาตรฐานที่ 165px แต่ปรับกว้าง-ยาวตามสัดส่วนภาพจริง */
+        /* การ์ดสไตล์พรีเมียม ขอบแดงมนโค้ง พร้อมพื้นที่แสดงข้อมูลด้านล่าง */
+        .card-card-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-card-wrapper:hover { transform: translateY(-5px); }
+
         .card-item { 
             background: var(--surface); 
             border: 3px solid var(--primary); 
             border-radius: var(--radius-md); 
             overflow: hidden; 
-            cursor: pointer; 
             position: relative; 
             display: flex; 
             flex-direction: column;
-            height: 165px; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            height: 190px; 
             box-shadow: 0 8px 25px rgba(244, 63, 94, 0.15);
         }
 
-        .card-item.portrait { width: calc((165px / 3.5) * 2.5); }
-        .card-item.landscape { width: calc((165px / 2.5) * 3.5); }
-
-        .card-item:hover { transform: translateY(-5px); box-shadow: 0 12px 35px rgba(244, 63, 94, 0.3); z-index: 2; }
+        .card-card-wrapper:hover .card-item { 
+            box-shadow: 0 12px 35px rgba(244, 63, 94, 0.3); 
+            border-color: var(--primary-hover);
+        }
         
+        .card-item.portrait { width: calc((190px / 3.5) * 2.5); }
+        .card-item.landscape { width: calc((190px / 2.5) * 3.5); }
+
         .card-item.secret { border-color: var(--warning); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.25); }
         .secret-badge { position: absolute; top: 4px; right: 4px; background: var(--warning); color: #fff; font-size: 7px; font-weight: 800; padding: 2px 6px; border-radius: 4px; z-index: 3; box-shadow: 0 2px 6px rgba(0,0,0,0.2); letter-spacing: 0.5px; }
         
@@ -196,7 +206,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #090d16;
+            background: #020617;
             overflow: hidden;
             position: relative;
         }
@@ -208,7 +218,7 @@
             transition: transform 0.4s ease; 
         }
 
-        .card-item:hover .card-img { 
+        .card-card-wrapper:hover .card-img { 
             transform: scale(1.05); 
         }
         
@@ -223,7 +233,40 @@
         .not-owned .card-img { filter: grayscale(100%); opacity: 0.35; }
         .not-owned .status-toggle { background: rgba(239, 68, 68, 0.9); }
         
-        .card-mini-info { display: none; }
+        /* ข้อมูลใต้การ์ด (หมายเลขและชื่อการ์ด) */
+        .card-footer-info {
+            width: 100%;
+            padding: 0 2px;
+            text-align: left;
+        }
+        .card-num-text {
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .card-name-text {
+            color: var(--dark);
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 1px;
+        }
+        [data-theme="dark"] .card-name-text {
+            color: #f1f5f9;
+        }
+        .card-desc-text {
+            color: var(--text);
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            opacity: 0.85;
+            margin-top: 1px;
+        }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 7, 12, 0.8); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 9999; padding: 16px; overflow-y: auto; }
         .modal-content { background: var(--surface); color: var(--dark); padding: 32px; border-radius: var(--radius-lg); max-width: 100%; width: 480px; position: relative; margin: auto; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6); border: 1.5px solid var(--border); animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -513,13 +556,21 @@
                 cardsInCol.forEach(c => {
                     const secretClass = c.isSecret ? 'secret' : '';
                     const secretBadge = c.isSecret ? `<div class="secret-badge">★ SECRET</div>` : '';
+                    const formattedNum = c.cardNumber ? (c.cardNumber.toString().padStart(3, '0')) : '---';
                     
                     html += `
-                        <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" id="card-${c.id}" onclick="openModal('${c.id}')">
-                            ${secretBadge}
-                            <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">${c.isOwned ? '✓' : '!'}</div>
-                            <div class="card-img-wrapper">
-                                <img src="${c.imageUrl}" class="card-img" loading="lazy" onload="detectCardOrientation(this, '${c.id}')">
+                        <div class="card-card-wrapper" onclick="openModal('${c.id}')">
+                            <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" id="card-${c.id}">
+                                ${secretBadge}
+                                <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">${c.isOwned ? '✓' : '!'}</div>
+                                <div class="card-img-wrapper">
+                                    <img src="${c.imageUrl}" class="card-img" loading="lazy" onload="detectCardOrientation(this, '${c.id}')">
+                                </div>
+                            </div>
+                            <div class="card-footer-info">
+                                <div class="card-num-text">${formattedNum}</div>
+                                <div class="card-name-text">${c.cardName}</div>
+                                <div class="card-desc-text">${c.event ? c.event : ''}</div>
                             </div>
                         </div>
                     `;
