@@ -862,7 +862,7 @@
             document.getElementById('editIsSecret').checked = c.isSecret || false;
             document.getElementById('editCardFile').value = '';
             
-            // เติมข้อมูลออโต้ทันทีเมื่อกดแก้ไขโดยอิงตามคอลเลกชันของการ์ดใบนี้
+            // ดึงข้อมูลออโต้ของคอลเลกชันนั้นๆ มาเติมให้อัตโนมัติ (เผื่อช่องไหนของการ์ดใบนี้ว่างแต่ในคอลเลกชันมีข้อมูล)
             handleCollectionInput(c.collectionName || '', 'edit');
 
             document.getElementById('viewMode').style.display = 'none';
