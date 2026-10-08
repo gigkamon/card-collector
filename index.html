@@ -344,7 +344,7 @@
                 <div class="form-group">
                     <label>📁 ชื่อคอลเลกชัน</label>
                     <div class="input-with-btn">
-                        <input type="text" id="editColName" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" required>
+                        <input type="text" id="editColName" style="text-transform: uppercase;" oninput="handleCollectionInput(this.value, 'edit')" required>
                         <button type="button" class="btn-select" onclick="openPicker('editColName', 'collection')">📌 เลือก</button>
                     </div>
                 </div>
@@ -613,7 +613,7 @@
                 <div class="form-group">
                     <label>📁 ชื่อคอลเลกชัน</label>
                     <div class="input-with-btn">
-                        <input type="text" id="inpColName" style="text-transform: uppercase;" oninput="handleCollectionInput(this.value)" required placeholder="เช่น ALBUM 1">
+                        <input type="text" id="inpColName" style="text-transform: uppercase;" oninput="handleCollectionInput(this.value, 'add')" required placeholder="เช่น ALBUM 1">
                         <button type="button" class="btn-select" onclick="openPicker('inpColName', 'collection')">📌 เลือก</button>
                     </div>
                 </div>
@@ -678,18 +678,25 @@
         `;
     }
 
-    // ฟังก์ชันเติมข้อมูล Hashtag และ Date อัตโนมัติเมื่อพิมพ์หรือเลือกคอลเลกชันซ้ำ
-    window.handleCollectionInput = (val) => {
+    // ฟังก์ชันเติมข้อมูล Event, Hashtag และ Date อัตโนมัติเมื่อเลือกหรือพิมพ์คอลเลกชัน
+    window.handleCollectionInput = (val, mode) => {
         const upperVal = val.trim().toUpperCase();
-        document.getElementById('inpColName').value = upperVal;
+        if (mode === 'add') {
+            document.getElementById('inpColName').value = upperVal;
+        } else {
+            document.getElementById('editColName').value = upperVal;
+        }
         
         const existingCard = myCards.find(c => c.collectionName === upperVal);
         if (existingCard) {
-            if (existingCard.hashtag && !document.getElementById('inpHashtag').value) {
-                document.getElementById('inpHashtag').value = existingCard.hashtag;
-            }
-            if (existingCard.cardDate && !document.getElementById('inpDate').value) {
-                document.getElementById('inpDate').value = existingCard.cardDate;
+            if (mode === 'add') {
+                if (existingCard.event && !document.getElementById('inpEvent').value) document.getElementById('inpEvent').value = existingCard.event;
+                if (existingCard.hashtag && !document.getElementById('inpHashtag').value) document.getElementById('inpHashtag').value = existingCard.hashtag;
+                if (existingCard.cardDate && !document.getElementById('inpDate').value) document.getElementById('inpDate').value = existingCard.cardDate;
+            } else {
+                if (existingCard.event && !document.getElementById('editEvent').value) document.getElementById('editEvent').value = existingCard.event;
+                if (existingCard.hashtag && !document.getElementById('editHashtag').value) document.getElementById('editHashtag').value = existingCard.hashtag;
+                if (existingCard.cardDate && !document.getElementById('editDate').value) document.getElementById('editDate').value = existingCard.cardDate;
             }
         }
     }
@@ -740,7 +747,9 @@
             const inputEl = document.getElementById(activeTargetInput);
             inputEl.value = val; 
             if (activeTargetInput === 'inpColName') {
-                handleCollectionInput(val);
+                handleCollectionInput(val, 'add');
+            } else if (activeTargetInput === 'editColName') {
+                handleCollectionInput(val, 'edit');
             }
         }
         closePicker();
