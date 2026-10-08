@@ -357,9 +357,9 @@
         <div class="tools-bar">
             <input type="text" class="search-input" placeholder="🔍 ค้นหาชื่อการ์ด หรือ หมายเลข..." id="searchInput" oninput="setSearch(this.value)">
             <div class="filter-group">
-                <button class="filter-btn active" id="btn-filter-all" onclick="setFilter('all')">ทั้งหมด</button>
-                <button class="filter-btn" id="btn-filter-owned" onclick="setFilter('owned')">✅ มีแล้ว</button>
-                <button class="filter-btn" id="btn-filter-missing" onclick="setFilter('missing')">❌ ยังขาด</button>
+                <button class="filter-btn active" id="btn-filter-all" onclick="setFilter('all')">ทั้งหมด (<span id="count-all">0</span>)</button>
+                <button class="filter-btn" id="btn-filter-owned" onclick="setFilter('owned')">✅ มีแล้ว (<span id="count-owned">0</span>)</button>
+                <button class="filter-btn" id="btn-filter-missing" onclick="setFilter('missing')">❌ ยังขาด (<span id="count-missing">0</span>)</button>
             </div>
         </div>
         <div id="collectionContainer"></div>
@@ -553,7 +553,7 @@
     let activeTargetInput = null;
     let currentPickerType = null;
     let hasInitialLoad = false;
-    let hiddenCollectionsState = {}; // จำสถานะการยุบ/กางคอลเลกชัน
+    let hiddenCollectionsState = {};
 
     setTimeout(() => { document.body.classList.add('theme-transition'); }, 200);
 
@@ -700,6 +700,7 @@
         
         if(allColNames.length === 0) {
             container.innerHTML = `<div style="text-align:center; padding:60px 20px; color:var(--text); font-weight:600;">ยังไม่มีข้อมูลการ์ด กดปุ่ม <b>"➕ เพิ่มการ์ดใหม่"</b> ด้านบนเพื่อเริ่มต้น</div>`;
+            updateFilterCounts(0, 0, 0);
             return;
         }
 
@@ -710,7 +711,7 @@
 
             if (cardsInCol.length > 0) {
                 const isHidden = hiddenCollectionsState[colName] || false;
-                const arrowIcon = isHidden ? '▶' : '▼'; // ใช้ลูกศรชี้ขวา (ยุบ) และชี้ลง (กาง)
+                const arrowIcon = isHidden ? '▶' : '▼';
                 const gridDisplay = isHidden ? 'display: none;' : 'display: flex;';
 
                 html += `
@@ -749,7 +750,6 @@
         filterCards();
     }
 
-    // ฟังก์ชันกดปุ่มลูกศรเพื่อยุบหรือกางการ์ดในคอลเลกชัน
     window.toggleCollectionCards = (colName) => {
         hiddenCollectionsState[colName] = !hiddenCollectionsState[colName];
         const isHidden = hiddenCollectionsState[colName];
@@ -767,6 +767,9 @@
 
     window.filterCards = () => {
         const sections = document.querySelectorAll('.collection-section');
+        let totalAllVisible = 0;
+        let totalOwnedVisible = 0;
+        let totalMissingVisible = 0;
 
         sections.forEach(section => {
             const colName = section.id.replace('section-', '');
@@ -793,6 +796,13 @@
                 }
 
                 if (isOwned) ownedCount++;
+
+                // นับจำนวนภาพรวมตามคำค้นหา (Search Query) สำหรับปุ่ม Tab ด้านบน
+                if (matchesSearch) {
+                    totalAllVisible++;
+                    if (isOwned) totalOwnedVisible++;
+                    else totalMissingVisible++;
+                }
             });
 
             if (visibleCount === 0) {
@@ -805,6 +815,14 @@
                 }
             }
         });
+
+        updateFilterCounts(totalAllVisible, totalOwnedVisible, totalMissingVisible);
+    }
+
+    function updateFilterCounts(all, owned, missing) {
+        document.getElementById('count-all').innerText = all;
+        document.getElementById('count-owned').innerText = owned;
+        document.getElementById('count-missing').innerText = missing;
     }
 
     window.detectCardOrientation = (img, cardId) => {
