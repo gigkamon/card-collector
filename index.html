@@ -299,11 +299,100 @@
 </div>
 
 <div id="mainAppSection" class="app-section">
-    <div class="header-actions" id="headerActions" style="display: none;">
+    <div class="header-actions" id="headerActions">
         <button onclick="renderAddForm()" class="btn-success" style="margin:0;">➕ เพิ่มการ์ดใหม่</button>
         <button onclick="handleLogout()" class="btn-outline" style="margin:0;">🚪 ออกจากระบบ</button>
     </div>
-    <div class="container" id="appContent" style="background: var(--surface);"></div>
+    
+    <!-- หน้าหลัก แสดงคอลเลกชัน -->
+    <div class="container" id="homeView" style="background: var(--surface);">
+        <h2>🌟 PHOTOCARD COLLECTION</h2>
+        <div class="sub-title">ระบบจัดการการ์ดสะสมส่วนตัวของคุณ</div>
+        
+        <div class="tools-bar">
+            <input type="text" class="search-input" placeholder="🔍 ค้นหาชื่อการ์ด หรือ หมายเลข..." id="searchInput" onkeyup="setSearch(this.value)">
+            <div class="filter-group">
+                <button class="filter-btn active" id="btn-filter-all" onclick="setFilter('all')">ทั้งหมด</button>
+                <button class="filter-btn" id="btn-filter-owned" onclick="setFilter('owned')">✅ มีแล้ว</button>
+                <button class="filter-btn" id="btn-filter-missing" onclick="setFilter('missing')">❌ ยังขาด</button>
+            </div>
+        </div>
+        <div id="collectionContainer"></div>
+    </div>
+
+    <!-- หน้าเพิ่มการ์ดใหม่ -->
+    <div class="container" id="addView" style="background: var(--surface); display: none;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;">
+            <h3 style="margin:0; font-size: 20px; color: var(--dark); font-weight: 800;">➕ เพิ่มการ์ดใหม่</h3>
+            <button class="btn-outline" onclick="switchView('home')" style="padding: 8px 16px; font-size: 13px;">⬅ ย้อนกลับ</button>
+        </div>
+        <form onsubmit="saveData(event)">
+            <div class="form-group">
+                <label>📁 ชื่อคอลเลกชัน</label>
+                <div class="input-with-btn">
+                    <input type="text" id="inpColName" style="text-transform: uppercase;" oninput="handleCollectionInput(this.value, 'add')" required placeholder="เช่น ALBUM 1">
+                    <button type="button" class="btn-select" onclick="openPicker('inpColName', 'collection')">📌 เลือก</button>
+                </div>
+            </div>
+            
+            <div style="display:flex; gap:12px;">
+                <div class="form-group" style="flex:1;">
+                    <label>🔢 หมายเลข</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="inpCardNum" placeholder="01">
+                        <button type="button" class="btn-select" onclick="openPicker('inpCardNum', 'number')">📌 เลือก</button>
+                    </div>
+                </div>
+                <div class="form-group" style="flex:2;">
+                    <label>🃏 ชื่อการ์ด</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="inpCardName" required placeholder="Ver. A">
+                        <button type="button" class="btn-select" onclick="openPicker('inpCardName', 'cardname')">📌 เลือก</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>ชื่องาน (Event)</label>
+                <div class="input-with-btn">
+                    <input type="text" id="inpEvent" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" placeholder="เช่น FANSIGN">
+                    <button type="button" class="btn-select" onclick="openPicker('inpEvent', 'event')">📌 เลือก</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>แฮชแท็ก</label>
+                <div class="input-with-btn">
+                    <input type="text" id="inpHashtag" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" placeholder="#BENEFIT">
+                    <button type="button" class="btn-select" onclick="openPicker('inpHashtag', 'hashtag')">📌 เลือก</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>📅 วันที่จัดงาน (Date)</label>
+                <input type="date" id="inpDate">
+            </div>
+
+            <div class="form-group">
+                <label>📸 รูปภาพของการ์ด</label>
+                <input type="file" id="inpCardFile" accept="image/*" required>
+            </div>
+            
+            <div style="background: var(--bg); padding: 16px; border-radius: var(--radius-md); border: 2px solid var(--border); margin: 20px 0;">
+                <label style="display:flex; align-items:center; gap:12px; font-weight:700; color:var(--dark); cursor:pointer; margin:0;">
+                    <input type="checkbox" id="inpIsSecret" style="width:20px; height:20px; accent-color: var(--warning);"> 🌟 Secret Card (ขอบทอง)
+                </label>
+            </div>
+
+            <div style="background: var(--bg); padding: 16px; border-radius: var(--radius-md); border: 2px solid var(--border); margin-bottom: 25px;">
+                <label style="display:flex; align-items:center; gap:12px; font-weight:700; color: var(--success); cursor:pointer; margin:0;">
+                    <input type="checkbox" id="inpIsOwned" checked style="width:20px; height:20px; accent-color: var(--success);"> ✅ มีการ์ดใบนี้ครอบครองแล้ว
+                </label>
+            </div>
+            
+            <button type="submit" class="btn-block btn-success" id="btnSave" style="padding: 16px;">📥 บันทึกข้อมูลการ์ด</button>
+        </form>
+    </div>
 </div>
 
 <!-- Modal รายละเอียดการ์ด -->
@@ -418,7 +507,6 @@
     let currentCardId = null;
     let activeTargetInput = null;
     let currentPickerType = null;
-    let isDataLoaded = false;
 
     window.toggleTheme = () => {
         const body = document.body;
@@ -488,19 +576,45 @@
             hashtag: d.hashtag, cardDate: d.card_date || d.date || '', isSecret: d.is_secret, imageUrl: d.image_url, isOwned: d.is_owned
         }));
 
-        isDataLoaded = true;
-        if(document.getElementById('inpColName')) return; 
         renderHome(); 
     }
 
-    window.setFilter = (filter) => { currentFilter = filter; renderHome(); }
+    window.switchView = (viewName) => {
+        if (viewName === 'home') {
+            document.getElementById('homeView').style.display = 'block';
+            document.getElementById('addView').style.display = 'none';
+            renderHome();
+        } else if (viewName === 'add') {
+            document.getElementById('homeView').style.display = 'none';
+            document.getElementById('addView').style.display = 'block';
+            // เคลียร์ฟอร์มเพิ่มการ์ด
+            document.getElementById('inpColName').value = '';
+            document.getElementById('inpCardNum').value = '';
+            document.getElementById('inpCardName').value = '';
+            document.getElementById('inpEvent').value = '';
+            document.getElementById('inpHashtag').value = '';
+            document.getElementById('inpDate').value = '';
+            document.getElementById('inpCardFile').value = '';
+            document.getElementById('inpIsSecret').checked = false;
+            document.getElementById('inpIsOwned').checked = true;
+        }
+    }
+
+    window.renderAddForm = () => {
+        switchView('add');
+    }
+
+    window.setFilter = (filter) => { 
+        currentFilter = filter; 
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`btn-filter-${filter}`).classList.add('active');
+        renderHome(); 
+    }
+    
     window.setSearch = (val) => { searchQuery = val.toLowerCase(); renderHome(); }
 
     window.renderHome = () => {
-        const headerActions = document.getElementById('headerActions');
-        if (headerActions) headerActions.style.display = 'flex';
-
-        const container = document.getElementById('appContent');
+        const container = document.getElementById('collectionContainer');
         
         let colMap = {};
         myCards.forEach(c => {
@@ -519,24 +633,12 @@
         });
         const allColNames = sortedCols.map(col => col.name);
         
-        let html = `
-            <h2>🌟 PHOTOCARD COLLECTION</h2>
-            <div class="sub-title">ระบบจัดการการ์ดสะสมส่วนตัวของคุณ</div>
-            
-            <div class="tools-bar">
-                <input type="text" class="search-input" placeholder="🔍 ค้นหาชื่อการ์ด หรือ หมายเลข..." value="${searchQuery}" onkeyup="setSearch(this.value)">
-                <div class="filter-group">
-                    <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" onclick="setFilter('all')">ทั้งหมด (${myCards.length})</button>
-                    <button class="filter-btn ${currentFilter === 'owned' ? 'active' : ''}" onclick="setFilter('owned')">✅ มีแล้ว (${myCards.filter(c=>c.isOwned).length})</button>
-                    <button class="filter-btn ${currentFilter === 'missing' ? 'active' : ''}" onclick="setFilter('missing')">❌ ยังขาด (${myCards.filter(c=>!c.isOwned).length})</button>
-                </div>
-            </div>
-        `;
-
         if(allColNames.length === 0) {
-            html += `<div style="text-align:center; padding:60px 20px; color:var(--text); font-weight:600;">ยังไม่มีข้อมูลการ์ด กดปุ่ม <b>"➕ เพิ่มการ์ดใหม่"</b> ด้านบนเพื่อเริ่มต้น</div>`;
+            container.innerHTML = `<div style="text-align:center; padding:60px 20px; color:var(--text); font-weight:600;">ยังไม่มีข้อมูลการ์ด กดปุ่ม <b>"➕ เพิ่มการ์ดใหม่"</b> ด้านบนเพื่อเริ่มต้น</div>`;
+            return;
         }
 
+        let html = '';
         allColNames.forEach(colName => {
             let cardsInCol = myCards.filter(c => c.collectionName === colName);
             cardsInCol = cardsInCol.filter(c => (c.cardName.toLowerCase().includes(searchQuery) || (c.cardNumber && c.cardNumber.toLowerCase().includes(searchQuery))));
@@ -589,84 +691,6 @@
             cardElement.classList.remove('landscape');
             cardElement.classList.add('portrait');
         }
-    }
-
-    window.renderAddForm = () => {
-        const headerActions = document.getElementById('headerActions');
-        if (headerActions) headerActions.style.display = 'none';
-
-        document.getElementById('appContent').innerHTML = `
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;">
-                <h3 style="margin:0; font-size: 20px; color: var(--dark); font-weight: 800;">➕ เพิ่มการ์ดใหม่</h3>
-                <button class="btn-outline" onclick="renderHome()" style="padding: 8px 16px; font-size: 13px;">⬅ ย้อนกลับ</button>
-            </div>
-            <form onsubmit="saveData(event)">
-                <div class="form-group">
-                    <label>📁 ชื่อคอลเลกชัน</label>
-                    <div class="input-with-btn">
-                        <input type="text" id="inpColName" style="text-transform: uppercase;" oninput="handleCollectionInput(this.value, 'add')" required placeholder="เช่น ALBUM 1">
-                        <button type="button" class="btn-select" onclick="openPicker('inpColName', 'collection')">📌 เลือก</button>
-                    </div>
-                </div>
-                
-                <div style="display:flex; gap:12px;">
-                    <div class="form-group" style="flex:1;">
-                        <label>🔢 หมายเลข</label>
-                        <div class="input-with-btn">
-                            <input type="text" id="inpCardNum" placeholder="01">
-                            <button type="button" class="btn-select" onclick="openPicker('inpCardNum', 'number')">📌 เลือก</button>
-                        </div>
-                    </div>
-                    <div class="form-group" style="flex:2;">
-                        <label>🃏 ชื่อการ์ด</label>
-                        <div class="input-with-btn">
-                            <input type="text" id="inpCardName" required placeholder="Ver. A">
-                            <button type="button" class="btn-select" onclick="openPicker('inpCardName', 'cardname')">📌 เลือก</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>ชื่องาน (Event)</label>
-                    <div class="input-with-btn">
-                        <input type="text" id="inpEvent" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" placeholder="เช่น FANSIGN">
-                        <button type="button" class="btn-select" onclick="openPicker('inpEvent', 'event')">📌 เลือก</button>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>แฮชแท็ก</label>
-                    <div class="input-with-btn">
-                        <input type="text" id="inpHashtag" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" placeholder="#BENEFIT">
-                        <button type="button" class="btn-select" onclick="openPicker('inpHashtag', 'hashtag')">📌 เลือก</button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>📅 วันที่จัดงาน (Date)</label>
-                    <input type="date" id="inpDate">
-                </div>
-
-                <div class="form-group">
-                    <label>📸 รูปภาพของการ์ด</label>
-                    <input type="file" id="inpCardFile" accept="image/*" required>
-                </div>
-                
-                <div style="background: var(--bg); padding: 16px; border-radius: var(--radius-md); border: 2px solid var(--border); margin: 20px 0;">
-                    <label style="display:flex; align-items:center; gap:12px; font-weight:700; color:var(--dark); cursor:pointer; margin:0;">
-                        <input type="checkbox" id="inpIsSecret" style="width:20px; height:20px; accent-color: var(--warning);"> 🌟 Secret Card (ขอบทอง)
-                    </label>
-                </div>
-
-                <div style="background: var(--bg); padding: 16px; border-radius: var(--radius-md); border: 2px solid var(--border); margin-bottom: 25px;">
-                    <label style="display:flex; align-items:center; gap:12px; font-weight:700; color: var(--success); cursor:pointer; margin:0;">
-                        <input type="checkbox" id="inpIsOwned" checked style="width:20px; height:20px; accent-color: var(--success);"> ✅ มีการ์ดใบนี้ครอบครองแล้ว
-                    </label>
-                </div>
-                
-                <button type="submit" class="btn-block btn-success" id="btnSave" style="padding: 16px;">📥 บันทึกข้อมูลการ์ด</button>
-            </form>
-        `;
     }
 
     window.handleCollectionInput = (val, mode) => {
@@ -802,7 +826,7 @@
 
             alert('✅ บันทึกการ์ดสำเร็จ!');
             await loadData();
-            renderHome();
+            switchView('home');
         } catch (error) {
             alert('เกิดข้อผิดพลาด: ' + error.message);
         } finally { btn.disabled = false; btn.innerText = '📥 บันทึกข้อมูลการ์ด'; }
