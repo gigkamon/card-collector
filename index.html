@@ -673,7 +673,7 @@
         `;
     }
 
-    // ฟังก์ชันเติมข้อมูล Event, Hashtag และ Date อัตโนมัติแยกตามแต่ละคอลเลกชัน
+    // ฟังก์ชันดึงข้อมูลล่าสุดของคอลเลกชัน (เรียงตามข้อมูลที่มีการอัปเดตหรือเพิ่มเข้ามาล่าสุด)
     window.handleCollectionInput = (val, mode) => {
         const upperVal = val.trim().toUpperCase();
         if (mode === 'add') {
@@ -682,10 +682,12 @@
             document.getElementById('editColName').value = upperVal;
         }
         
+        // ค้นหาการ์ดทั้งหมดในคอลเลกชันนี้ และดึงข้อมูลจากการ์ดใบที่มีข้อมูลครบถ้วนล่าสุด
         const collectionCards = myCards.filter(c => c.collectionName === upperVal);
-        const latestCard = collectionCards.find(c => c.event || c.hashtag || c.cardDate);
+        if (collectionCards.length > 0) {
+            // เลือกเอาการ์ดใบสุดท้ายในอาเรย์ (หรือใบที่เพิ่งบันทึก/แก้ไขล่าสุด)
+            const latestCard = collectionCards[collectionCards.length - 1];
 
-        if (latestCard) {
             if (mode === 'add') {
                 if (latestCard.event) document.getElementById('inpEvent').value = latestCard.event;
                 if (latestCard.hashtag) document.getElementById('inpHashtag').value = latestCard.hashtag;
@@ -862,7 +864,7 @@
             document.getElementById('editIsSecret').checked = c.isSecret || false;
             document.getElementById('editCardFile').value = '';
             
-            // ดึงข้อมูลออโต้ของคอลเลกชันนั้นๆ มาเติมให้อัตโนมัติ (เผื่อช่องไหนของการ์ดใบนี้ว่างแต่ในคอลเลกชันมีข้อมูล)
+            // ดึงข้อมูลล่าสุดของคอลเลกชันนั้นมาเติมให้อัตโนมัติทันที
             handleCollectionInput(c.collectionName || '', 'edit');
 
             document.getElementById('viewMode').style.display = 'none';
