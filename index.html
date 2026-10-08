@@ -216,7 +216,7 @@
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
-            transition: transform 0.4s ease, opacity 0.3s ease; 
+            transition: transform 0.4s ease; 
         }
 
         .card-item:hover .card-img { 
@@ -549,7 +549,7 @@
     let activeTargetInput = null;
     let currentPickerType = null;
     let hasInitialLoad = false;
-    let hiddenImagesState = {}; // จำสถานะการซ่อนรูปแต่ละคอลเลกชัน
+    let hiddenCollectionsState = {}; // จำสถานะการยุบซ่อนกรอบการ์ดแต่ละคอลเลกชัน
 
     setTimeout(() => { document.body.classList.add('theme-transition'); }, 200);
 
@@ -705,30 +705,30 @@
             cardsInCol.sort((a, b) => (parseInt(a.cardNumber) || 0) - (parseInt(b.cardNumber) || 0));
 
             if (cardsInCol.length > 0) {
-                const isHidden = hiddenImagesState[colName] || false;
-                const btnText = isHidden ? '👁️ แสดงรูปภาพ' : '👁️ ซ่อนรูปภาพ';
+                const isHidden = hiddenCollectionsState[colName] || false;
+                const btnText = isHidden ? '👁️ แสดงการ์ด' : '👁️ ซ่อนการ์ด';
+                const gridDisplay = isHidden ? 'display: none;' : 'display: flex;';
 
                 html += `
                     <div class="collection-section" id="section-${colName}">
                         <div class="collection-title">
                             <span>📁 ${colName} <span class="col-count" id="count-${colName}" style="color:var(--text); font-weight:600; font-size: 13px; opacity:0.8;"></span></span>
-                            <button class="hide-img-btn" onclick="toggleCollectionImages('${colName}')" id="btn-hide-${colName}">${btnText}</button>
+                            <button class="hide-img-btn" onclick="toggleCollectionCards('${colName}')" id="btn-hide-${colName}">${btnText}</button>
                         </div>
-                        <div class="template-grid" id="grid-${colName}">
+                        <div class="template-grid" id="grid-${colName}" style="${gridDisplay}">
                 `;
 
                 cardsInCol.forEach(c => {
                     const secretClass = c.isSecret ? 'secret' : '';
                     const secretBadge = c.isSecret ? `<div class="secret-badge">★ SECRET</div>` : '';
                     const formattedNum = c.cardNumber ? (c.cardNumber.toString().padStart(3, '0')) : '---';
-                    const imgOpacity = isHidden ? 'opacity: 0;' : 'opacity: 1;';
                     
                     html += `
                         <div class="card-item ${c.isOwned ? 'owned' : 'not-owned'} ${secretClass}" id="card-${c.id}" onclick="openModal('${c.id}')" data-name="${c.cardName.toLowerCase()}" data-num="${(c.cardNumber || '').toLowerCase()}" data-owned="${c.isOwned}" data-col="${colName}">
                             ${secretBadge}
                             <div class="status-toggle" onclick="toggleOwnership(event, '${c.id}', ${c.isOwned})">${c.isOwned ? '✓' : '!'}</div>
                             <div class="card-img-wrapper">
-                                <img src="${c.imageUrl}" class="card-img" style="${imgOpacity}" loading="lazy" onload="detectCardOrientation(this, '${c.id}')">
+                                <img src="${c.imageUrl}" class="card-img" loading="lazy" onload="detectCardOrientation(this, '${c.id}')">
                             </div>
                             <div class="card-footer-overlay">
                                 <div class="card-num-text">${formattedNum}</div>
@@ -745,22 +745,19 @@
         filterCards();
     }
 
-    // ฟังก์ชันสำหรับกดซ่อน/แสดงรูปภาพการ์ดในแต่ละคอลเลกชัน
-    window.toggleCollectionImages = (colName) => {
-        hiddenImagesState[colName] = !hiddenImagesState[colName];
-        const isHidden = hiddenImagesState[colName];
+    // ฟังก์ชันกดซ่อน/แสดงกรอบการ์ดทั้งหมดในคอลเลกชัน เหลือไว้แค่ชื่อคอลเลกชัน
+    window.toggleCollectionCards = (colName) => {
+        hiddenCollectionsState[colName] = !hiddenCollectionsState[colName];
+        const isHidden = hiddenCollectionsState[colName];
         
         const btn = document.getElementById(`btn-hide-${colName}`);
         if (btn) {
-            btn.innerText = isHidden ? '👁️ แสดงรูปภาพ' : '👁️ ซ่อนรูปภาพ';
+            btn.innerText = isHidden ? '👁️ แสดงการ์ด' : '👁️ ซ่อนการ์ด';
         }
 
         const grid = document.getElementById(`grid-${colName}`);
         if (grid) {
-            const images = grid.querySelectorAll('.card-img');
-            images.forEach(img => {
-                img.style.opacity = isHidden ? '0' : '1';
-            });
+            grid.style.display = isHidden ? 'none' : 'flex';
         }
     }
 
