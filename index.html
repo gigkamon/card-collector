@@ -52,10 +52,9 @@
             min-height: 100vh; 
             width: 100%;
             overflow-x: hidden;
-            overflow-y: scroll; /* บังคับ Scrollbar ให้มีเสมอ เพื่อป้องกันหน้ากระตุก/ขยับซ้ายขวาเวลาสลับหน้าสั้นกับหน้ายาว */
+            overflow-y: scroll;
         }
 
-        /* เพิ่ม Transition แค่ตอนกดเปลี่ยนโหมดสี ไม่ให้ทำงานตอนโหลดหน้าแรก */
         .theme-transition, .theme-transition .container, .theme-transition .theme-toggle-btn {
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
@@ -156,7 +155,7 @@
         .filter-btn:hover { border-color: var(--primary); color: var(--dark); }
         .filter-btn.active { background: var(--dark); color: var(--surface); border-color: var(--dark); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 
-        .collection-section { margin-bottom: 40px; width: 100%; animation: fadeIn 0.5s ease-out; }
+        .collection-section { margin-bottom: 40px; width: 100%; }
         .collection-title { 
             color: var(--dark); font-size: 17px; font-weight: 800; margin-bottom: 18px; text-align: left; 
             display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border); padding-bottom: 12px;
@@ -167,20 +166,6 @@
             flex-wrap: wrap;
             gap: 16px;
             align-items: flex-start;
-        }
-
-        /* Animation เฟดลอยขึ้นมาให้ดูสมูทเวลาโหลดข้อมูล หรือตอนสลับหน้าเว็บ */
-        .view-animate {
-            animation: viewFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes viewFadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .card-item { 
@@ -194,12 +179,8 @@
             flex-direction: column;
             height: 200px; 
             width: calc((200px / 3.5) * 2.5); 
-            
-            /* แก้กระพริบ: เอาคำว่า 'all' ออก เปลี่ยนเฉพาะสิ่งที่เกี่ยวกับการ hover แทน ป้องกันความกว้างขยายแบบมี animation */
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s, border-color 0.3s; 
-            
             box-shadow: 0 8px 25px rgba(244, 63, 94, 0.15);
-            animation: fadeIn 0.4s ease-out forwards;
         }
 
         .card-item.portrait { width: calc((200px / 3.5) * 2.5); }
@@ -228,9 +209,7 @@
             transition: transform 0.4s ease; 
         }
 
-        .card-item:hover .card-img { 
-            transform: scale(1.05); 
-        }
+        .card-item:hover .card-img { transform: scale(1.05); }
         
         .status-toggle { 
             position: absolute; top: 8px; left: 8px; font-size: 9px; width: 22px; height: 22px; border-radius: 50%; 
@@ -255,20 +234,8 @@
             z-index: 3;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .card-num-text {
-            color: var(--primary);
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-        }
-        .card-name-text {
-            color: #ffffff;
-            font-size: 12px;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .card-num-text { color: var(--primary); font-size: 10px; font-weight: 800; letter-spacing: 0.5px; }
+        .card-name-text { color: #ffffff; font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 7, 12, 0.8); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 9999; padding: 16px; overflow-y: auto; }
         .modal-content { background: var(--surface); color: var(--dark); padding: 32px; border-radius: var(--radius-lg); max-width: 100%; width: 480px; position: relative; margin: auto; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6); border: 1.5px solid var(--border); animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -307,39 +274,28 @@
         .picker-del-btn { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 2px solid var(--border); padding: 0 14px; height: 46px; border-radius: var(--radius-md); font-size: 14px; cursor: pointer; transition: 0.2s; }
         .picker-del-btn:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
 
-        /* Loader บังหน้าจอตอนรีเฟรช ป้องกันการกระพริบ */
+        /* Loader บังหน้าจอตอนโหลดแรกสุด */
         #pageLoader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg);
-            z-index: 999999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: var(--primary);
-            transition: opacity 0.4s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 999999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: var(--primary); transition: opacity 0.4s ease;
         }
         .spinner {
             width: 45px; height: 45px;
-            border: 4px solid var(--primary-light);
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 16px;
+            border: 4px solid var(--primary-light); border-top: 4px solid var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body data-theme="dark">
 
-<!-- สคริปต์นี้ใส่ไว้ตรงนี้เพื่อเปลี่ยนสีหน้าเว็บให้ตรงกับ Theme ทันทีก่อนที่จะวาดส่วนอื่นๆ ป้องกันหน้าขาวแวบ -->
 <script>
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.body.setAttribute('data-theme', savedTheme);
 </script>
 
-<!-- Loading Screen -->
 <div id="pageLoader">
     <div class="spinner"></div>
     <div style="font-weight: 800; font-size: 15px; color: var(--dark);">กำลังโหลดข้อมูล...</div>
@@ -352,7 +308,7 @@
 </div>
 
 <!-- ซ่อนหน้า Login ไว้ก่อน -->
-<div class="container view-animate" id="authSection" style="max-width: 440px; margin-top: 50px; display: none;">
+<div class="container" id="authSection" style="max-width: 440px; margin-top: 50px; display: none;">
     <h2>✨ PHOTOCARD VAULT</h2>
     <div class="sub-title" style="margin-bottom: 30px;">เข้าสู่ระบบเพื่อจัดการคอลเลกชันของคุณ</div>
     <div class="form-group"><input type="email" id="authEmail" placeholder="อีเมลของคุณ"></div>
@@ -368,8 +324,7 @@
     </div>
     
     <!-- หน้าหลัก แสดงคอลเลกชัน -->
-    <!-- ใส่ class="view-animate" ทำให้จังหวะสลับหน้ามีความลื่นไหล เฟดขึ้นมาแบบนิ่มนวล -->
-    <div class="container view-animate" id="homeView" style="background: var(--surface);">
+    <div class="container" id="homeView" style="background: var(--surface);">
         <h2>🌟 PHOTOCARD COLLECTION</h2>
         <div class="sub-title">ระบบจัดการการ์ดสะสมส่วนตัวของคุณ</div>
         
@@ -385,8 +340,7 @@
     </div>
 
     <!-- หน้าเพิ่มการ์ดใหม่ -->
-    <!-- ใส่ class="view-animate" ทำให้จังหวะสลับหน้ามีความลื่นไหล เฟดขึ้นมาแบบนิ่มนวล -->
-    <div class="container view-animate" id="addView" style="background: var(--surface); display: none;">
+    <div class="container" id="addView" style="background: var(--surface); display: none;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;">
             <h3 style="margin:0; font-size: 20px; color: var(--dark); font-weight: 800;">➕ เพิ่มการ์ดใหม่</h3>
             <button class="btn-outline" onclick="switchView('home')" style="padding: 8px 16px; font-size: 13px;">⬅ ย้อนกลับ</button>
@@ -573,9 +527,8 @@
     let activeTargetInput = null;
     let currentPickerType = null;
     let isRendered = false;
-    let isAppInitialized = false;
+    let hasInitialLoad = false; // ตัวแปรป้องกันการ Fetch ข้อมูลเบิ้ล 2 รอบ
 
-    // หน่วงเวลาใส่คลาส transition เพื่อไม่ให้ตอนโหลดหน้าแรกสีแวบ
     setTimeout(() => { document.body.classList.add('theme-transition'); }, 200);
 
     window.toggleTheme = () => {
@@ -601,23 +554,25 @@
 
     updateThemeUI(document.body.getAttribute('data-theme'));
 
-    // ซ่อน Loader เมื่อจัดการข้อมูลเสร็จ
     function finishLoading() {
-        if (!isAppInitialized) {
-            isAppInitialized = true;
-            const loader = document.getElementById('pageLoader');
+        const loader = document.getElementById('pageLoader');
+        if(loader && loader.style.display !== 'none') {
             loader.style.opacity = '0';
             setTimeout(() => { loader.style.display = 'none'; }, 400);
         }
     }
 
-    // จัดการ Auth State
+    // แก้ปัญหาหน้าจอโหลดซ้ำด้วยการเช็ค hasInitialLoad
     supabase.auth.onAuthStateChange(async (event, session) => {
         if (session) { 
             currentUser = session.user; 
             toggleAuthView(true); 
-            await loadData(); 
+            if (!hasInitialLoad) {
+                hasInitialLoad = true;
+                await loadData(); 
+            }
         } else { 
+            hasInitialLoad = false;
             currentUser = null; 
             toggleAuthView(false); 
         }
@@ -657,12 +612,11 @@
             hashtag: d.hashtag, cardDate: d.card_date || d.date || '', isSecret: d.is_secret, imageUrl: d.image_url, isOwned: d.is_owned
         }));
 
-        isRendered = false; // บังคับสร้างโครงสร้างใหม่เมื่อข้อมูลเปลี่ยน
+        isRendered = false; 
         renderHome(); 
     }
 
     window.switchView = (viewName) => {
-        // เมื่อมีการกดสลับหน้า ให้เลื่อนกลับไปด้านบนสุดด้วยความนุ่มนวล
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
         if (viewName === 'home') {
