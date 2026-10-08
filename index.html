@@ -507,6 +507,7 @@
     let currentCardId = null;
     let activeTargetInput = null;
     let currentPickerType = null;
+    let isInitialized = false;
 
     window.toggleTheme = () => {
         const body = document.body;
@@ -576,7 +577,8 @@
             hashtag: d.hashtag, cardDate: d.card_date || d.date || '', isSecret: d.is_secret, imageUrl: d.image_url, isOwned: d.is_owned
         }));
 
-        renderHome(); 
+        renderHome();
+        isInitialized = true;
     }
 
     window.switchView = (viewName) => {
@@ -587,7 +589,6 @@
         } else if (viewName === 'add') {
             document.getElementById('homeView').style.display = 'none';
             document.getElementById('addView').style.display = 'block';
-            // เคลียร์ฟอร์มเพิ่มการ์ด
             document.getElementById('inpColName').value = '';
             document.getElementById('inpCardNum').value = '';
             document.getElementById('inpCardName').value = '';
@@ -677,7 +678,11 @@
                 html += `</div></div>`;
             }
         });
-        container.innerHTML = html;
+        
+        // เช็คว่าเนื้อหาเปลี่ยนไหมก่อนสั่ง innerHTML เพื่อป้องกันการกระพริบ
+        if (container.innerHTML !== html) {
+            container.innerHTML = html;
+        }
     }
 
     window.detectCardOrientation = (img, cardId) => {
