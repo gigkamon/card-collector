@@ -490,7 +490,7 @@
         myCards = data.map(d => ({
             id: d.id, userId: d.user_id, collectionName: d.collection_name,
             cardName: d.card_name, cardNumber: d.card_number, event: d.event,
-            hashtag: d.hashtag, cardDate: d.card_date || '', isSecret: d.is_secret, imageUrl: d.image_url, isOwned: d.is_owned
+            hashtag: d.hashtag, cardDate: d.card_date || d.date || '', isSecret: d.is_secret, imageUrl: d.image_url, isOwned: d.is_owned
         }));
 
         if(document.getElementById('inpColName')) return; 
@@ -673,7 +673,7 @@
         `;
     }
 
-    // ฟังก์ชันเติมข้อมูล Event, Hashtag และ Date แยกตามแต่ละคอลเลกชันอัตโนมัติ
+    // ฟังก์ชันเติมข้อมูล Event, Hashtag และ Date อัตโนมัติแยกตามแต่ละคอลเลกชัน
     window.handleCollectionInput = (val, mode) => {
         const upperVal = val.trim().toUpperCase();
         if (mode === 'add') {
@@ -862,6 +862,9 @@
             document.getElementById('editIsSecret').checked = c.isSecret || false;
             document.getElementById('editCardFile').value = '';
             
+            // เติมข้อมูลออโต้ทันทีเมื่อกดแก้ไขโดยอิงตามคอลเลกชันของการ์ดใบนี้
+            handleCollectionInput(c.collectionName || '', 'edit');
+
             document.getElementById('viewMode').style.display = 'none';
             document.getElementById('editMode').style.display = 'block';
         } else {
