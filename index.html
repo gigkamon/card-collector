@@ -159,17 +159,21 @@
             background: var(--bg);
             border: 1.5px solid var(--border);
             color: var(--text);
-            padding: 6px 14px;
-            font-size: 11px;
-            font-weight: 700;
-            border-radius: 20px;
+            width: 32px; height: 32px;
+            font-size: 12px;
+            border-radius: 50%;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             transition: 0.2s;
+            padding: 0;
         }
         .hide-img-btn:hover {
             border-color: var(--primary);
             color: var(--primary);
             background: var(--primary-light);
+            transform: scale(1.1);
         }
         
         .template-grid { 
@@ -549,7 +553,7 @@
     let activeTargetInput = null;
     let currentPickerType = null;
     let hasInitialLoad = false;
-    let hiddenCollectionsState = {}; // จำสถานะการยุบซ่อนกรอบการ์ดแต่ละคอลเลกชัน
+    let hiddenCollectionsState = {}; // จำสถานะการยุบ/กางคอลเลกชัน
 
     setTimeout(() => { document.body.classList.add('theme-transition'); }, 200);
 
@@ -706,14 +710,14 @@
 
             if (cardsInCol.length > 0) {
                 const isHidden = hiddenCollectionsState[colName] || false;
-                const btnText = isHidden ? '👁️ แสดงการ์ด' : '👁️ ซ่อนการ์ด';
+                const arrowIcon = isHidden ? '▶' : '▼'; // ใช้ลูกศรชี้ขวา (ยุบ) และชี้ลง (กาง)
                 const gridDisplay = isHidden ? 'display: none;' : 'display: flex;';
 
                 html += `
                     <div class="collection-section" id="section-${colName}">
                         <div class="collection-title">
                             <span>📁 ${colName} <span class="col-count" id="count-${colName}" style="color:var(--text); font-weight:600; font-size: 13px; opacity:0.8;"></span></span>
-                            <button class="hide-img-btn" onclick="toggleCollectionCards('${colName}')" id="btn-hide-${colName}">${btnText}</button>
+                            <button class="hide-img-btn" onclick="toggleCollectionCards('${colName}')" id="btn-hide-${colName}">${arrowIcon}</button>
                         </div>
                         <div class="template-grid" id="grid-${colName}" style="${gridDisplay}">
                 `;
@@ -745,14 +749,14 @@
         filterCards();
     }
 
-    // ฟังก์ชันกดซ่อน/แสดงกรอบการ์ดทั้งหมดในคอลเลกชัน เหลือไว้แค่ชื่อคอลเลกชัน
+    // ฟังก์ชันกดปุ่มลูกศรเพื่อยุบหรือกางการ์ดในคอลเลกชัน
     window.toggleCollectionCards = (colName) => {
         hiddenCollectionsState[colName] = !hiddenCollectionsState[colName];
         const isHidden = hiddenCollectionsState[colName];
         
         const btn = document.getElementById(`btn-hide-${colName}`);
         if (btn) {
-            btn.innerText = isHidden ? '👁️ แสดงการ์ด' : '👁️ ซ่อนการ์ด';
+            btn.innerText = isHidden ? '▶' : '▼';
         }
 
         const grid = document.getElementById(`grid-${colName}`);
