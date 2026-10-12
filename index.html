@@ -19,10 +19,10 @@
             --surface: rgba(255, 255, 255, 0.9);
             --border: #e2e8f0;
             --radius-lg: 24px;
-            --radius-md: 16px;
-            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-sm: 6px;
             --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
-            --card-width: 95px; /* ปรับขนาดการ์ดให้เล็กลงและเรียงสวยงาม */
+            --card-width: 80px; /* ลดขนาดการ์ดลงให้กะทัดรัดและเรียงสวย */
         }
 
         [data-theme="dark"] {
@@ -100,7 +100,7 @@
         @media (min-width: 640px) {
             body { padding: 32px 20px; }
             .container { padding: 32px; }
-            :root { --card-width: 115px; }
+            :root { --card-width: 95px; }
         }
         
         h2 { color: var(--dark); margin-top: 0; text-align: center; font-weight: 800; font-size: 22px; letter-spacing: -0.5px; }
@@ -191,13 +191,13 @@
         .template-grid { 
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(var(--card-width), 1fr));
-            gap: 10px;
+            gap: 8px;
             align-items: start;
         }
 
         .card-item { 
             background: var(--surface); 
-            border: 2px solid var(--primary); 
+            border: 1.5px solid var(--primary); 
             border-radius: var(--radius-sm); 
             overflow: hidden; 
             cursor: pointer; 
@@ -206,17 +206,17 @@
             flex-direction: column;
             aspect-ratio: 2.5 / 3.5;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
-            box-shadow: 0 4px 12px rgba(244, 63, 94, 0.06);
+            box-shadow: 0 3px 10px rgba(244, 63, 94, 0.05);
         }
 
         .card-item.landscape {
             aspect-ratio: 3.5 / 2.5;
         }
 
-        .card-item:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(244, 63, 94, 0.2); z-index: 2; border-color: var(--primary-hover); }
+        .card-item:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(244, 63, 94, 0.18); z-index: 2; border-color: var(--primary-hover); }
         
-        .card-item.secret { border-color: var(--warning); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.12); }
-        .secret-badge { position: absolute; top: 4px; right: 4px; background: var(--warning); color: #fff; font-size: 6px; font-weight: 800; padding: 2px 4px; border-radius: 3px; z-index: 4; box-shadow: 0 2px 4px rgba(0,0,0,0.2); letter-spacing: 0.5px; }
+        .card-item.secret { border-color: var(--warning); box-shadow: 0 3px 10px rgba(245, 158, 11, 0.1); }
+        .secret-badge { position: absolute; top: 3px; right: 3px; background: var(--warning); color: #fff; font-size: 5px; font-weight: 800; padding: 1px 3px; border-radius: 2px; z-index: 4; letter-spacing: 0.3px; }
         
         .card-img-wrapper {
             width: 100%;
@@ -239,9 +239,9 @@
         .card-item:hover .card-img { transform: scale(1.05); }
         
         .status-toggle { 
-            position: absolute; top: 4px; left: 4px; font-size: 8px; width: 18px; height: 18px; border-radius: 50%; 
+            position: absolute; top: 3px; left: 3px; font-size: 7px; width: 15px; height: 15px; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; z-index: 4; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3); transition: 0.2s; backdrop-filter: blur(4px); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3); transition: 0.2s; backdrop-filter: blur(4px); 
         }
         .status-toggle:hover { transform: scale(1.15); }
         .owned .card-img { filter: grayscale(0%); opacity: 1; }
@@ -253,16 +253,16 @@
             position: absolute;
             bottom: 0; left: 0; width: 100%;
             background: rgba(11, 15, 25, 0.85);
-            backdrop-filter: blur(6px);
-            padding: 4px 6px;
+            backdrop-filter: blur(4px);
+            padding: 3px 4px;
             display: flex;
             flex-direction: column;
-            gap: 1px;
+            gap: 0px;
             z-index: 3;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .card-num-text { color: var(--primary); font-size: 8px; font-weight: 800; letter-spacing: 0.5px; }
-        .card-name-text { color: #ffffff; font-size: 10px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-num-text { color: var(--primary); font-size: 7px; font-weight: 800; letter-spacing: 0.3px; }
+        .card-name-text { color: #ffffff; font-size: 9px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 7, 12, 0.8); backdrop-filter: blur(12px); justify-content: center; align-items: center; z-index: 9999; padding: 16px; overflow-y: auto; }
         .modal-content { background: var(--surface); backdrop-filter: blur(20px); color: var(--dark); padding: 28px; border-radius: var(--radius-md); max-width: 100%; width: 440px; position: relative; margin: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border: 1px solid var(--border); animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
