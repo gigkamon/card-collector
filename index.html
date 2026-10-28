@@ -106,7 +106,7 @@
         h2 { color: var(--dark); margin-top: 0; text-align: center; font-weight: 800; font-size: 22px; letter-spacing: -0.5px; }
         .sub-title { text-align: center; font-size: 12px; color: var(--text); margin-top: -4px; margin-bottom: 22px; font-weight: 600; opacity: 0.8; }
         
-        .form-group { margin-bottom: 16px; text-align: left; }
+        .form-group { margin-bottom: 16px; text-align: left; width: 100%; }
         label { display: block; margin-bottom: 6px; font-weight: 700; color: var(--dark); font-size: 12px; }
         
         input[type="text"], input[type="email"], input[type="password"], input[type="date"] { 
@@ -119,8 +119,8 @@
             background: var(--surface);
         }
 
-        .input-with-btn { display: flex; gap: 8px; width: 100%; align-items: center; }
-        .input-with-btn input { flex: 1; min-width: 0; height: 48px; }
+        .input-with-btn { display: flex; gap: 8px; width: 100%; align-items: stretch; }
+        .input-with-btn input { flex: 1; min-width: 0; height: 48px; margin: 0; }
 
         input[type="file"] { 
             width: 100%; padding: 10px; background: var(--bg); border-radius: var(--radius-sm); 
@@ -146,7 +146,6 @@
         .btn-outline { background: var(--surface); color: var(--dark); border: 2px solid var(--border); }
         .btn-outline:hover { background: var(--bg); border-color: var(--primary); }
         
-        /* ปรับปุ่ม "📌 เลือก" ให้มีความสูงเท่ากันพอดีกับช่องกรอก (48px) */
         .btn-select { 
             background: var(--bg); 
             color: var(--dark); 
@@ -155,6 +154,7 @@
             font-size: 12px; 
             font-weight: 700; 
             height: 48px; 
+            min-width: 80px;
             border-radius: var(--radius-sm); 
         }
         .btn-select:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
