@@ -19,10 +19,10 @@
             --surface: rgba(255, 255, 255, 0.9);
             --border: #e2e8f0;
             --radius-lg: 24px;
-            --radius-md: 14px;
-            --radius-sm: 6px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
             --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
-            --card-width: 80px; /* ลดขนาดการ์ดลงให้กะทัดรัดและเรียงสวย */
+            --card-width: 80px;
         }
 
         [data-theme="dark"] {
@@ -110,7 +110,7 @@
         label { display: block; margin-bottom: 6px; font-weight: 700; color: var(--dark); font-size: 12px; }
         
         input[type="text"], input[type="email"], input[type="password"], input[type="date"] { 
-            width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); 
+            width: 100%; height: 48px; padding: 0 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); 
             font-size: 13px; outline: none; background: var(--bg); color: var(--dark); font-weight: 600;
         }
         input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="date"]:focus {
@@ -119,8 +119,8 @@
             background: var(--surface);
         }
 
-        .input-with-btn { display: flex; gap: 8px; width: 100%; }
-        .input-with-btn input { flex: 1; min-width: 0; }
+        .input-with-btn { display: flex; gap: 8px; width: 100%; align-items: center; }
+        .input-with-btn input { flex: 1; min-width: 0; height: 48px; }
 
         input[type="file"] { 
             width: 100%; padding: 10px; background: var(--bg); border-radius: var(--radius-sm); 
@@ -135,21 +135,32 @@
         }
         button:active { transform: scale(0.97); }
         
-        .btn-block { width: 100%; margin-bottom: 10px; }
+        .btn-block { width: 100%; margin-bottom: 10px; height: 48px; }
         .btn-primary { background: var(--primary); color: white; box-shadow: 0 6px 16px rgba(244, 63, 94, 0.25); }
         .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
         .btn-success { background: var(--success); color: white; box-shadow: 0 6px 16px rgba(16, 185, 129, 0.25); }
         .btn-success:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-secondary { background: #64748b; color: white; }
+        .btn-secondary { background: #64748b; color: white; height: 48px; }
         .btn-warning { background: var(--warning); color: white; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-outline { background: var(--surface); color: var(--dark); border: 2px solid var(--border); }
         .btn-outline:hover { background: var(--bg); border-color: var(--primary); }
-        .btn-select { background: var(--bg); color: var(--dark); border: 2px solid var(--border); padding: 0 12px; font-size: 11px; font-weight: 700; border-radius: var(--radius-sm); }
+        
+        /* ปรับปุ่ม "📌 เลือก" ให้มีความสูงเท่ากันพอดีกับช่องกรอก (48px) */
+        .btn-select { 
+            background: var(--bg); 
+            color: var(--dark); 
+            border: 2px solid var(--border); 
+            padding: 0 16px; 
+            font-size: 12px; 
+            font-weight: 700; 
+            height: 48px; 
+            border-radius: var(--radius-sm); 
+        }
         .btn-select:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
 
         .tools-bar { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
-        .search-input { width: 100%; padding: 14px 20px; border-radius: 50px; border: 2px solid var(--border); background: var(--bg); color: var(--dark); outline: none; font-size: 13px; font-weight: 600; box-shadow: var(--shadow); }
+        .search-input { width: 100%; height: 48px; padding: 0 20px; border-radius: 50px; border: 2px solid var(--border); background: var(--bg); color: var(--dark); outline: none; font-size: 13px; font-weight: 600; box-shadow: var(--shadow); }
         .search-input:focus { border-color: var(--primary); background: var(--surface); box-shadow: 0 0 0 3px var(--primary-light); }
         
         .filter-group { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
@@ -187,7 +198,6 @@
             transform: scale(1.1);
         }
         
-        /* Auto-Fit Responsive Grid สำหรับการ์ดขนาดเล็กน่ารัก */
         .template-grid { 
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(var(--card-width), 1fr));
